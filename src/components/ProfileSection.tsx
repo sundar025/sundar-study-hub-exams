@@ -1,17 +1,22 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText } from "lucide-react";
+import ProfileEditModal from "./ProfileEditModal";
+import ExamAlertModal from "./ExamAlertModal";
+import ExamCalendarModal from "./ExamCalendarModal";
 
 const ProfileSection = () => {
-  const userProfile = {
+  const [profileEditOpen, setProfileEditOpen] = useState(false);
+  const [examAlertOpen, setExamAlertOpen] = useState(false);
+  const [examCalendarOpen, setExamCalendarOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState({
     name: "Raj Kumar",
     bio: "Passionate government job aspirant with strong analytical skills and dedication towards public service. Focused on clearing competitive exams and contributing to nation building.",
     qualification: "B.E Computer Science",
     experience: "2 years in IT Industry",
     location: "Chennai, Tamil Nadu"
-  };
+  });
 
   const eligibleExams = {
     state: [
@@ -87,6 +92,11 @@ const ProfileSection = () => {
 
   const getCategoryBadgeColor = (category: string) => {
     return category === "Central" ? "bg-indigo-100 text-indigo-800" : "bg-emerald-100 text-emerald-800";
+  };
+
+  const handleProfileSave = (newProfile: any) => {
+    setUserProfile(newProfile);
+    // Here you would typically save to backend
   };
 
   return (
@@ -225,21 +235,49 @@ const ProfileSection = () => {
         <CardContent className="p-8">
           <h3 className="text-xl font-bold text-center mb-6">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button className="h-12" variant="outline">
+            <Button 
+              className="h-12" 
+              variant="outline"
+              onClick={() => setExamAlertOpen(true)}
+            >
               <Bell className="mr-2" size={20} />
               Set Exam Alerts
             </Button>
-            <Button className="h-12" variant="outline">
+            <Button 
+              className="h-12" 
+              variant="outline"
+              onClick={() => setExamCalendarOpen(true)}
+            >
               <Calendar className="mr-2" size={20} />
               View Exam Calendar
             </Button>
-            <Button className="h-12" variant="outline">
+            <Button 
+              className="h-12" 
+              variant="outline"
+              onClick={() => setProfileEditOpen(true)}
+            >
               <GraduationCap className="mr-2" size={20} />
-              Update Qualification
+              Update Profile
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* Modals */}
+      <ProfileEditModal
+        isOpen={profileEditOpen}
+        onClose={() => setProfileEditOpen(false)}
+        currentProfile={userProfile}
+        onSave={handleProfileSave}
+      />
+      <ExamAlertModal
+        isOpen={examAlertOpen}
+        onClose={() => setExamAlertOpen(false)}
+      />
+      <ExamCalendarModal
+        isOpen={examCalendarOpen}
+        onClose={() => setExamCalendarOpen(false)}
+      />
     </div>
   );
 };
