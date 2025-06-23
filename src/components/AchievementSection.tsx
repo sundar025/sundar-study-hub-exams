@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Circle, Download, Trophy } from "lucide-react";
+import { CheckCircle, Circle, Download, Trophy, Award, Star } from "lucide-react";
 
 const AchievementSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("state");
@@ -202,26 +201,99 @@ const AchievementSection = () => {
         </CardContent>
       </Card>
 
-      {/* Certificate Section */}
+      {/* Enhanced Certificate Section */}
       {isCompleted && (
-        <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
-          <CardContent className="p-8 text-center">
-            <Trophy className="mx-auto mb-4 text-yellow-500" size={64} />
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Congratulations!</h3>
-            <p className="text-gray-600 mb-6">
-              You have completed all topics for {selectedExam}. Download your certificate now!
-            </p>
-            <div className="bg-white p-4 rounded-lg border-2 border-yellow-300 mb-4">
-              <h4 className="font-bold text-lg">Certificate Preview</h4>
-              <p className="text-sm text-gray-600 mt-2">
-                This certifies that <strong>Raj Kumar</strong> has successfully completed the syllabus for <strong>{selectedExam}</strong>
-              </p>
-              <p className="text-xs text-gray-500 mt-2">Signature: Sundar (Founder)</p>
+        <Card className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 border-2 border-amber-200 shadow-2xl">
+          <CardContent className="p-0">
+            {/* Certificate Design */}
+            <div className="bg-white m-4 p-8 rounded-lg border-4 border-double border-amber-600 shadow-lg">
+              {/* Certificate Header */}
+              <div className="text-center mb-8">
+                <div className="flex justify-center items-center gap-4 mb-4">
+                  <Award className="text-amber-600 w-12 h-12" />
+                  <Trophy className="text-amber-500 w-16 h-16" />
+                  <Award className="text-amber-600 w-12 h-12" />
+                </div>
+                <h2 className="text-4xl font-bold text-amber-800 mb-2">CERTIFICATE OF COMPLETION</h2>
+                <div className="w-32 h-1 bg-amber-600 mx-auto rounded"></div>
+              </div>
+
+              {/* Certificate Body */}
+              <div className="text-center mb-8">
+                <p className="text-lg text-gray-700 mb-4">This is to certify that</p>
+                <div className="bg-amber-50 border-2 border-amber-300 rounded-lg p-4 mb-4">
+                  <h3 className="text-3xl font-bold text-amber-900">RAJ KUMAR</h3>
+                </div>
+                <p className="text-lg text-gray-700 mb-4">has successfully completed the comprehensive syllabus for</p>
+                <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6">
+                  <h4 className="text-2xl font-bold text-blue-800">{selectedExam}</h4>
+                  <p className="text-blue-600">Government Exam Preparation Course</p>
+                </div>
+                
+                <div className="flex justify-center items-center gap-8 mb-6">
+                  <Star className="text-amber-500 w-8 h-8" />
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">Completion Rate</p>
+                    <p className="text-2xl font-bold text-green-600">100%</p>
+                  </div>
+                  <Star className="text-amber-500 w-8 h-8" />
+                </div>
+
+                <p className="text-gray-600 mb-8">
+                  Awarded on {new Date().toLocaleDateString('en-IN', { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                  })}
+                </p>
+              </div>
+
+              {/* Certificate Footer */}
+              <div className="flex justify-between items-end">
+                <div className="text-left">
+                  <div className="w-48 border-b-2 border-gray-400 mb-2"></div>
+                  <p className="text-sm text-gray-600">Date of Issue</p>
+                  <p className="font-medium">{new Date().toLocaleDateString()}</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="mb-4">
+                    <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                      SEAL
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <div className="mb-4">
+                    {/* Realistic Signature */}
+                    <div className="w-48 h-16 bg-gradient-to-r from-blue-800 to-indigo-800 rounded-lg flex items-center justify-center mb-2 shadow-md">
+                      <span className="text-white font-bold text-xl transform -rotate-12">Sundar</span>
+                    </div>
+                  </div>
+                  <div className="w-48 border-b-2 border-gray-400 mb-2"></div>
+                  <p className="text-sm text-gray-600">Authorized Signature</p>
+                  <p className="font-bold text-blue-800">SUNDAR</p>
+                  <p className="text-sm text-gray-600">Founder & Director</p>
+                  <p className="text-xs text-gray-500">Competitive Exam Study Hub</p>
+                </div>
+              </div>
+
+              {/* Decorative Border Elements */}
+              <div className="absolute top-4 left-4 w-8 h-8 border-l-4 border-t-4 border-amber-600 rounded-tl-lg"></div>
+              <div className="absolute top-4 right-4 w-8 h-8 border-r-4 border-t-4 border-amber-600 rounded-tr-lg"></div>
+              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-4 border-b-4 border-amber-600 rounded-bl-lg"></div>
+              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-4 border-b-4 border-amber-600 rounded-br-lg"></div>
             </div>
-            <Button onClick={downloadCertificate} size="lg" className="bg-yellow-500 hover:bg-yellow-600">
-              <Download className="mr-2" size={20} />
-              Download Certificate
-            </Button>
+
+            {/* Download Button */}
+            <div className="text-center p-6">
+              <Button onClick={downloadCertificate} size="lg" className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 text-lg shadow-lg">
+                <Download className="mr-3" size={24} />
+                Download Official Certificate
+              </Button>
+              <p className="text-sm text-gray-600 mt-2">High-resolution PDF will be generated</p>
+            </div>
           </CardContent>
         </Card>
       )}

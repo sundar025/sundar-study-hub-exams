@@ -2,11 +2,23 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Clock, Users, Award, Play, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { BookOpen, Clock, Users, Award, Play, FileText, Activity, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const ExamSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
+  const [showPhysicalTest, setShowPhysicalTest] = useState(false);
+  const [physicalTestData, setPhysicalTestData] = useState({
+    height: "",
+    chest: "",
+    runningTime: "",
+    longJumpDistance: "",
+    notes: ""
+  });
+  const { toast } = useToast();
 
   const stateExams = [
     {
@@ -131,6 +143,34 @@ const ExamSection = () => {
     }
   ];
 
+  const physicalTestRequirements = {
+    height: {
+      men: "170 cm minimum",
+      women: "160 cm minimum"
+    },
+    chest: {
+      men: "81 cm minimum (86 cm expanded)",
+      women: "79 cm minimum"
+    },
+    running: {
+      men: "1600m in 5 minutes 30 seconds",
+      women: "1600m in 6 minutes 30 seconds"
+    },
+    longJump: {
+      men: "4.20 meters minimum",
+      women: "3.50 meters minimum"
+    }
+  };
+
+  const savePhysicalTestData = () => {
+    // In a real app, this would save to a database
+    localStorage.setItem('physicalTestData', JSON.stringify(physicalTestData));
+    toast({
+      title: "Data Saved",
+      description: "Your physical test measurements have been saved successfully.",
+    });
+  };
+
   const currentExams = selectedCategory === "state" ? stateExams : centralExams;
 
   const studyMaterials = {
@@ -152,6 +192,163 @@ const ExamSection = () => {
     ]
   };
 
+  if (showPhysicalTest) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center gap-4 mb-6">
+          <Button onClick={() => setShowPhysicalTest(false)} variant="outline">
+            ← Back to Exams
+          </Button>
+          <h2 className="text-3xl font-bold text-gray-900">TNUSRB SI - Physical Test Requirements</h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Requirements Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="text-blue-500" />
+                Physical Test Standards
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Height Requirements</h4>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.height.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.height.women}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Chest Measurements</h4>
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.chest.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.chest.women}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Running Test</h4>
+                <div className="bg-orange-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.running.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.running.women}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Long Jump</h4>
+                <div className="bg-purple-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.longJump.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.longJump.women}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Personal Tracking Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Save className="text-green-500" />
+                Track Your Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="height">Your Height (cm)</Label>
+                <Input
+                  id="height"
+                  type="number"
+                  placeholder="Enter your height"
+                  value={physicalTestData.height}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, height: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="chest">Chest Measurement (cm)</Label>
+                <Input
+                  id="chest"
+                  type="number"
+                  placeholder="Enter chest measurement"
+                  value={physicalTestData.chest}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, chest: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="running">1600m Running Time (mm:ss)</Label>
+                <Input
+                  id="running"
+                  type="text"
+                  placeholder="e.g., 05:20"
+                  value={physicalTestData.runningTime}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, runningTime: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="longjump">Long Jump Distance (meters)</Label>
+                <Input
+                  id="longjump"
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter distance in meters"
+                  value={physicalTestData.longJumpDistance}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, longJumpDistance: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="notes">Personal Notes & Improvement Areas</Label>
+                <textarea
+                  id="notes"
+                  className="w-full p-3 border rounded-lg min-h-[100px]"
+                  placeholder="Note down your improvements, training schedule, areas to focus on..."
+                  value={physicalTestData.notes}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, notes: e.target.value}))}
+                />
+              </div>
+
+              <Button onClick={savePhysicalTestData} className="w-full">
+                <Save className="mr-2" size={20} />
+                Save My Progress
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tips Section */}
+        <Card className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+          <CardContent className="p-6">
+            <h3 className="text-xl font-bold mb-4">Training Tips</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold mb-2">Running Improvement</h4>
+                <ul className="text-sm opacity-90 space-y-1">
+                  <li>• Start with 20-30 minutes daily jogging</li>
+                  <li>• Gradually increase pace and distance</li>
+                  <li>• Focus on breathing techniques</li>
+                  <li>• Track your time improvements weekly</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Long Jump Training</h4>
+                <ul className="text-sm opacity-90 space-y-1">
+                  <li>• Practice approach run consistency</li>
+                  <li>• Work on leg strength exercises</li>
+                  <li>• Focus on takeoff technique</li>
+                  <li>• Record each jump distance</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (selectedExam) {
     const exam = currentExams.find(e => e.name === selectedExam);
     return (
@@ -161,6 +358,12 @@ const ExamSection = () => {
             ← Back to Exams
           </Button>
           <h2 className="text-3xl font-bold text-gray-900">{exam?.name} - Study Materials</h2>
+          {selectedExam === "TNUSRB SI" && (
+            <Button onClick={() => setShowPhysicalTest(true)} variant="outline" className="ml-auto">
+              <Activity className="mr-2" size={16} />
+              Physical Test Requirements
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
