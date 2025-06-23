@@ -7,72 +7,184 @@ import { Progress } from "@/components/ui/progress";
 import { Clock, Target, TrendingUp, Brain, Award } from "lucide-react";
 
 const TestSection = () => {
+  const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedTest, setSelectedTest] = useState<string | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<{[key: number]: string}>({});
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes for demo
 
-  const tests = [
-    {
-      id: "tnpsc-g1-prelims",
-      name: "TNPSC Group 1 - Prelims Mock Test",
-      questions: 200,
-      duration: "150 minutes",
-      subjects: ["General Studies", "Tamil", "Current Affairs"],
-      difficulty: "High",
-      attempts: 1250
-    },
-    {
-      id: "tnpsc-g2-prelims",
-      name: "TNPSC Group 2 - Prelims Mock Test",
-      questions: 200,
-      duration: "150 minutes",
-      subjects: ["General Studies", "Tamil", "Aptitude"],
-      difficulty: "Medium",
-      attempts: 2100
-    },
-    {
-      id: "tnpsc-g4-mains",
-      name: "TNPSC Group 4 - Mains Mock Test",
-      questions: 200,
-      duration: "180 minutes",
-      subjects: ["General Studies", "Tamil", "Mathematics", "English"],
-      difficulty: "Medium",
-      attempts: 3400
-    },
-    {
-      id: "tnusrb-si",
-      name: "TNUSRB SI - Complete Mock Test",
-      questions: 200,
-      duration: "120 minutes",
-      subjects: ["General Studies", "Aptitude", "Tamil", "English"],
-      difficulty: "High",
-      attempts: 890
-    }
-  ];
-
-  // Mock analysis data
-  const analysisData = {
-    overallScore: 75,
-    timeSpent: "98 minutes",
-    averageSpeed: "29 seconds per question",
-    strengths: ["General Studies", "Current Affairs"],
-    improvements: ["Mathematics", "English Grammar"],
-    subjectWise: [
-      { subject: "General Studies", score: 85, total: 50 },
-      { subject: "Tamil", score: 78, total: 50 },
-      { subject: "Mathematics", score: 65, total: 50 },
-      { subject: "English", score: 72, total: 50 }
+  const allTests = {
+    state: [
+      {
+        id: "tnpsc-g1-prelims",
+        name: "TNPSC Group 1 - Prelims Mock Test",
+        questions: 200,
+        duration: "150 minutes",
+        subjects: ["General Studies", "Tamil", "Current Affairs"],
+        difficulty: "High",
+        attempts: 1250
+      },
+      {
+        id: "tnpsc-g2-prelims",
+        name: "TNPSC Group 2 - Prelims Mock Test",
+        questions: 200,
+        duration: "150 minutes",
+        subjects: ["General Studies", "Tamil", "Aptitude"],
+        difficulty: "Medium",
+        attempts: 2100
+      },
+      {
+        id: "tnpsc-g4-mains",
+        name: "TNPSC Group 4 - Mains Mock Test",
+        questions: 200,
+        duration: "180 minutes",
+        subjects: ["General Studies", "Tamil", "Mathematics", "English"],
+        difficulty: "Medium",
+        attempts: 3400
+      },
+      {
+        id: "tnusrb-si",
+        name: "TNUSRB SI - Complete Mock Test",
+        questions: 200,
+        duration: "120 minutes",
+        subjects: ["General Studies", "Aptitude", "Tamil", "English"],
+        difficulty: "High",
+        attempts: 890
+      }
+    ],
+    central: [
+      {
+        id: "upsc-prelims",
+        name: "UPSC Civil Services - Prelims Mock",
+        questions: 100,
+        duration: "120 minutes",
+        subjects: ["History", "Geography", "Polity", "Economy"],
+        difficulty: "Very High",
+        attempts: 5200
+      },
+      {
+        id: "ssc-cgl",
+        name: "SSC CGL - Tier 1 Mock Test",
+        questions: 100,
+        duration: "60 minutes",
+        subjects: ["Reasoning", "General Awareness", "Quantitative Aptitude", "English"],
+        difficulty: "High",
+        attempts: 8900
+      },
+      {
+        id: "ssc-chsl",
+        name: "SSC CHSL - Tier 1 Mock Test",
+        questions: 100,
+        duration: "60 minutes",
+        subjects: ["General Intelligence", "General Awareness", "Quantitative Aptitude", "English"],
+        difficulty: "Medium",
+        attempts: 4500
+      },
+      {
+        id: "nda-math",
+        name: "NDA - Mathematics Mock Test",
+        questions: 120,
+        duration: "150 minutes",
+        subjects: ["Algebra", "Trigonometry", "Geometry", "Calculus"],
+        difficulty: "High",
+        attempts: 2100
+      }
     ]
   };
 
+  const sampleQuestions = [
+    {
+      question: "Who is known as the Father of the Indian Constitution?",
+      options: ["Mahatma Gandhi", "Dr. B.R. Ambedkar", "Jawaharlal Nehru", "Sardar Patel"],
+      correct: 1,
+      subject: "Polity"
+    },
+    {
+      question: "Which is the largest state in India by area?",
+      options: ["Maharashtra", "Uttar Pradesh", "Rajasthan", "Madhya Pradesh"],
+      correct: 2,
+      subject: "Geography"
+    },
+    {
+      question: "What is the square root of 144?",
+      options: ["11", "12", "13", "14"],
+      correct: 1,
+      subject: "Mathematics"
+    },
+    {
+      question: "Who wrote the book 'Discovery of India'?",
+      options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Subhas Chandra Bose", "Dr. APJ Abdul Kalam"],
+      correct: 1,
+      subject: "History"
+    },
+    {
+      question: "What is the capital of Australia?",
+      options: ["Sydney", "Melbourne", "Canberra", "Perth"],
+      correct: 2,
+      subject: "Geography"
+    }
+  ];
+
+  const currentTests = allTests[selectedCategory as keyof typeof allTests];
+
   const startTest = (testId: string) => {
     setSelectedTest(testId);
-    // Simulate test completion after 3 seconds
-    setTimeout(() => {
-      setShowAnalysis(true);
-    }, 3000);
+    setCurrentQuestion(0);
+    setAnswers({});
+    setShowAnalysis(false);
+    setTimeLeft(300);
+  };
+
+  const selectAnswer = (questionIndex: number, answerIndex: number) => {
+    setAnswers(prev => ({
+      ...prev,
+      [questionIndex]: answerIndex.toString()
+    }));
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestion < sampleQuestions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    } else {
+      finishTest();
+    }
+  };
+
+  const finishTest = () => {
+    setShowAnalysis(true);
+  };
+
+  const calculateResults = () => {
+    let correct = 0;
+    let subjectWise: {[key: string]: {correct: number, total: number}} = {};
+    
+    sampleQuestions.forEach((q, index) => {
+      const subject = q.subject;
+      if (!subjectWise[subject]) {
+        subjectWise[subject] = {correct: 0, total: 0};
+      }
+      subjectWise[subject].total++;
+      
+      if (answers[index] && parseInt(answers[index]) === q.correct) {
+        correct++;
+        subjectWise[subject].correct++;
+      }
+    });
+
+    return {
+      score: Math.round((correct / sampleQuestions.length) * 100),
+      subjectWise: Object.entries(subjectWise).map(([subject, data]) => ({
+        subject,
+        score: data.correct,
+        total: data.total,
+        percentage: Math.round((data.correct / data.total) * 100)
+      }))
+    };
   };
 
   if (showAnalysis) {
+    const results = calculateResults();
     return (
       <div className="space-y-8">
         <div className="text-center">
@@ -85,15 +197,15 @@ const TestSection = () => {
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">{analysisData.overallScore}%</div>
+                <div className="text-3xl font-bold text-primary">{results.score}%</div>
                 <div className="text-sm text-gray-600">Overall Score</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{analysisData.timeSpent}</div>
+                <div className="text-3xl font-bold text-green-600">{Math.floor(300 - timeLeft / 60)}m</div>
                 <div className="text-sm text-gray-600">Time Spent</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600">{analysisData.averageSpeed}</div>
+                <div className="text-3xl font-bold text-orange-600">32s</div>
                 <div className="text-sm text-gray-600">Avg. Speed</div>
               </div>
               <div className="text-center">
@@ -114,66 +226,24 @@ const TestSection = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {analysisData.subjectWise.map((subject, index) => (
+              {results.subjectWise.map((subject, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{subject.subject}</span>
                     <span className="text-sm text-gray-600">{subject.score}/{subject.total}</span>
                   </div>
-                  <Progress value={(subject.score / subject.total) * 100} className="h-2" />
+                  <Progress value={subject.percentage} className="h-2" />
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Strengths and Improvements */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="border-green-200 bg-green-50">
-            <CardHeader>
-              <CardTitle className="text-green-800 flex items-center gap-2">
-                <TrendingUp />
-                Your Strengths
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {analysisData.strengths.map((strength, index) => (
-                  <Badge key={index} variant="secondary" className="bg-green-100 text-green-800 mr-2">
-                    {strength}
-                  </Badge>
-                ))}
-              </div>
-              <p className="text-sm text-green-700 mt-3">
-                Great job! Keep practicing these subjects to maintain your strong performance.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-orange-200 bg-orange-50">
-            <CardHeader>
-              <CardTitle className="text-orange-800 flex items-center gap-2">
-                <Brain />
-                Areas for Improvement
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {analysisData.improvements.map((improvement, index) => (
-                  <Badge key={index} variant="secondary" className="bg-orange-100 text-orange-800 mr-2">
-                    {improvement}
-                  </Badge>
-                ))}
-              </div>
-              <p className="text-sm text-orange-700 mt-3">
-                Focus more on these subjects. We recommend additional practice sessions.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
         <div className="text-center">
-          <Button onClick={() => setShowAnalysis(false)} size="lg">
+          <Button onClick={() => {
+            setShowAnalysis(false);
+            setSelectedTest(null);
+          }} size="lg">
             Take Another Test
           </Button>
         </div>
@@ -182,16 +252,51 @@ const TestSection = () => {
   }
 
   if (selectedTest) {
+    const question = sampleQuestions[currentQuestion];
     return (
       <div className="space-y-8">
-        <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-          <CardContent className="p-8 text-center">
-            <Clock className="mx-auto mb-4" size={64} />
-            <h2 className="text-2xl font-bold mb-2">Test in Progress...</h2>
-            <p className="text-lg opacity-90">Analyzing your performance</p>
-            <div className="mt-6">
-              <Progress value={75} className="h-2 bg-white/20" />
-              <p className="mt-2 text-sm opacity-75">Processing answers...</p>
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-bold">Question {currentQuestion + 1} of {sampleQuestions.length}</h3>
+              <div className="flex items-center gap-2">
+                <Clock size={20} />
+                <span className="font-mono">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>
+              </div>
+            </div>
+            <Progress value={((currentQuestion + 1) / sampleQuestions.length) * 100} className="h-2" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Badge className="mb-4">{question.subject}</Badge>
+              <h4 className="text-lg font-medium mb-4">{question.question}</h4>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3">
+              {question.options.map((option, index) => (
+                <Button
+                  key={index}
+                  variant={answers[currentQuestion] === index.toString() ? "default" : "outline"}
+                  className="text-left justify-start h-auto p-4"
+                  onClick={() => selectAnswer(currentQuestion, index)}
+                >
+                  <span className="mr-3 font-bold">{String.fromCharCode(65 + index)}.</span>
+                  {option}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex justify-between">
+              <Button 
+                variant="outline" 
+                onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
+                disabled={currentQuestion === 0}
+              >
+                Previous
+              </Button>
+              <Button onClick={nextQuestion}>
+                {currentQuestion === sampleQuestions.length - 1 ? "Finish Test" : "Next Question"}
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -206,8 +311,26 @@ const TestSection = () => {
         <p className="text-lg text-gray-600">Test your knowledge and get detailed performance analysis</p>
       </div>
 
+      {/* Category Selection */}
+      <div className="flex justify-center space-x-4">
+        <Button
+          variant={selectedCategory === "state" ? "default" : "outline"}
+          onClick={() => setSelectedCategory("state")}
+          size="lg"
+        >
+          State Government Exams
+        </Button>
+        <Button
+          variant={selectedCategory === "central" ? "default" : "outline"}
+          onClick={() => setSelectedCategory("central")}
+          size="lg"
+        >
+          Central Government Exams
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {tests.map((test, index) => (
+        {currentTests.map((test, index) => (
           <Card key={index} className="hover:shadow-xl transition-all duration-300">
             <CardHeader>
               <CardTitle className="text-lg">{test.name}</CardTitle>
@@ -232,7 +355,7 @@ const TestSection = () => {
               </div>
               
               <div className="flex justify-between items-center">
-                <Badge variant={test.difficulty === "High" ? "destructive" : "secondary"}>
+                <Badge variant={test.difficulty === "Very High" || test.difficulty === "High" ? "destructive" : "secondary"}>
                   {test.difficulty}
                 </Badge>
                 <span className="text-xs text-gray-500">{test.attempts} attempts</span>
