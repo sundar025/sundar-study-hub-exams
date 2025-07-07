@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +21,7 @@ const ProfileSection = () => {
 
   const eligibleExams = {
     state: [
-      "TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"
+      "TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI", "TNPSC VAO"
     ],
     central: [
       "UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", 
@@ -33,7 +32,7 @@ const ProfileSection = () => {
   const recentNews = [
     {
       title: "UPSC Civil Services Mains 2024 Results Declared",
-      date: "2024-06-20",
+      date: "2024-12-20",
       source: "UPSC Official",
       link: "#",
       type: "Result",
@@ -41,7 +40,7 @@ const ProfileSection = () => {
     },
     {
       title: "TNPSC Group 1 Notification 2024 Released - 1000+ Posts",
-      date: "2024-06-18",
+      date: "2024-12-18",
       source: "TNPSC Official",
       link: "#",
       type: "Important",
@@ -49,7 +48,7 @@ const ProfileSection = () => {
     },
     {
       title: "SSC CGL 2024 Tier 1 Exam Schedule Announced",
-      date: "2024-06-15",
+      date: "2024-12-15",
       source: "SSC Official",
       link: "#",
       type: "Schedule",
@@ -57,7 +56,7 @@ const ProfileSection = () => {
     },
     {
       title: "TNUSRB SI Recruitment 2024 - Physical Standards Updated",
-      date: "2024-06-12",
+      date: "2024-12-12",
       source: "TNUSRB Official",
       link: "#",
       type: "Updates",
@@ -65,7 +64,7 @@ const ProfileSection = () => {
     },
     {
       title: "NDA 2024 (II) Online Application Started",
-      date: "2024-06-10",
+      date: "2024-12-10",
       source: "UPSC Official",
       link: "#",
       type: "Recruitment",
@@ -73,7 +72,7 @@ const ProfileSection = () => {
     },
     {
       title: "TNPSC Group 2 Mains Exam Pattern Changes 2024",
-      date: "2024-06-08",
+      date: "2024-12-08",
       source: "TNPSC Official",
       link: "#",
       type: "Updates",
@@ -96,9 +95,11 @@ const ProfileSection = () => {
     return category === "Central" ? "bg-indigo-100 text-indigo-800" : "bg-emerald-100 text-emerald-800";
   };
 
-  const handleProfileSave = (newProfile: any) => {
-    setUserProfile(newProfile);
-    // Here you would typically save to backend
+  const handleProfileSave = (updatedProfile: any) => {
+    setUserProfile(updatedProfile);
+    // In a real application, this would save to a backend database
+    localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+    console.log('Profile updated:', updatedProfile);
   };
 
   return (
@@ -135,7 +136,12 @@ const ProfileSection = () => {
                 <h4 className="font-semibold text-gray-900 mb-2">Bio</h4>
                 <p className="text-gray-600 text-sm leading-relaxed">{userProfile.bio}</p>
               </div>
-              <Button variant="outline">Edit Profile</Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setProfileEditOpen(true)}
+              >
+                Edit Profile
+              </Button>
             </div>
           </div>
         </CardContent>
