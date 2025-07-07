@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText, Download } from "lucide-react";
+import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText } from "lucide-react";
 import ProfileEditModal from "./ProfileEditModal";
 import ExamAlertModal from "./ExamAlertModal";
 import ExamCalendarModal from "./ExamCalendarModal";
-import { useToast } from "@/hooks/use-toast";
 
 const ProfileSection = () => {
   const [profileEditOpen, setProfileEditOpen] = useState(false);
@@ -19,19 +19,10 @@ const ProfileSection = () => {
     experience: "2 years in IT Industry",
     location: "Chennai, Tamil Nadu"
   });
-  const { toast } = useToast();
-
-  // Load user profile from localStorage on component mount
-  useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      setUserProfile(JSON.parse(savedProfile));
-    }
-  }, []);
 
   const eligibleExams = {
     state: [
-      "TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI", "TNPSC VAO"
+      "TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"
     ],
     central: [
       "UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", 
@@ -42,7 +33,7 @@ const ProfileSection = () => {
   const recentNews = [
     {
       title: "UPSC Civil Services Mains 2024 Results Declared",
-      date: "2024-12-20",
+      date: "2024-06-20",
       source: "UPSC Official",
       link: "#",
       type: "Result",
@@ -50,7 +41,7 @@ const ProfileSection = () => {
     },
     {
       title: "TNPSC Group 1 Notification 2024 Released - 1000+ Posts",
-      date: "2024-12-18",
+      date: "2024-06-18",
       source: "TNPSC Official",
       link: "#",
       type: "Important",
@@ -58,7 +49,7 @@ const ProfileSection = () => {
     },
     {
       title: "SSC CGL 2024 Tier 1 Exam Schedule Announced",
-      date: "2024-12-15",
+      date: "2024-06-15",
       source: "SSC Official",
       link: "#",
       type: "Schedule",
@@ -66,7 +57,7 @@ const ProfileSection = () => {
     },
     {
       title: "TNUSRB SI Recruitment 2024 - Physical Standards Updated",
-      date: "2024-12-12",
+      date: "2024-06-12",
       source: "TNUSRB Official",
       link: "#",
       type: "Updates",
@@ -74,7 +65,7 @@ const ProfileSection = () => {
     },
     {
       title: "NDA 2024 (II) Online Application Started",
-      date: "2024-12-10",
+      date: "2024-06-10",
       source: "UPSC Official",
       link: "#",
       type: "Recruitment",
@@ -82,7 +73,7 @@ const ProfileSection = () => {
     },
     {
       title: "TNPSC Group 2 Mains Exam Pattern Changes 2024",
-      date: "2024-12-08",
+      date: "2024-06-08",
       source: "TNPSC Official",
       link: "#",
       type: "Updates",
@@ -105,81 +96,9 @@ const ProfileSection = () => {
     return category === "Central" ? "bg-indigo-100 text-indigo-800" : "bg-emerald-100 text-emerald-800";
   };
 
-  const handleProfileSave = (updatedProfile: any) => {
-    setUserProfile(updatedProfile);
-    localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-    
-    // Generate certificate with new name
-    generateCertificate(updatedProfile.name);
-    
-    toast({
-      title: "Profile Updated",
-      description: "Your profile has been updated successfully and a new certificate has been generated.",
-    });
-    console.log('Profile updated:', updatedProfile);
-  };
-
-  const generateCertificate = (userName: string) => {
-    const certificateContent = `
-CERTIFICATE OF COMPLETION
-=========================
-
-This is to certify that
-
-${userName.toUpperCase()}
-
-has successfully completed the Government Job Preparation Course
-and demonstrated proficiency in:
-
-✓ Constitutional Law and Indian Polity
-✓ Indian History and Culture  
-✓ Geography and Environment
-✓ General Science and Technology
-✓ Current Affairs and General Knowledge
-✓ Quantitative Aptitude and Reasoning
-
-Course Duration: 6 Months
-Completion Date: ${new Date().toLocaleDateString()}
-Certificate ID: CERT-${Date.now()}
-
-This certificate is valid for employment in Government sectors
-and acknowledges the candidate's preparedness for competitive examinations.
-
-Issued by: Government Job Preparation Platform
-Date of Issue: ${new Date().toLocaleDateString()}
-
-[SEAL]                                    [SIGNATURE]
-                                         Director
-                              Academic Affairs
-    `;
-
-    const blob = new Blob([certificateContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${userName.replace(/\s+/g, '_')}_Completion_Certificate.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    // Save certificate record
-    const certificates = JSON.parse(localStorage.getItem('certificates') || '[]');
-    certificates.push({
-      name: userName,
-      issueDate: new Date().toISOString(),
-      certificateId: `CERT-${Date.now()}`,
-      type: 'Course Completion'
-    });
-    localStorage.setItem('certificates', JSON.stringify(certificates));
-  };
-
-  const downloadLatestCertificate = () => {
-    generateCertificate(userProfile.name);
-    toast({
-      title: "Certificate Downloaded",
-      description: `Certificate issued to ${userProfile.name} has been downloaded.`,
-    });
+  const handleProfileSave = (newProfile: any) => {
+    setUserProfile(newProfile);
+    // Here you would typically save to backend
   };
 
   return (
@@ -216,22 +135,7 @@ Date of Issue: ${new Date().toLocaleDateString()}
                 <h4 className="font-semibold text-gray-900 mb-2">Bio</h4>
                 <p className="text-gray-600 text-sm leading-relaxed">{userProfile.bio}</p>
               </div>
-              <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setProfileEditOpen(true)}
-                >
-                  Edit Profile
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={downloadLatestCertificate}
-                  className="flex items-center gap-2"
-                >
-                  <Download size={16} />
-                  Download Certificate
-                </Button>
-              </div>
+              <Button variant="outline">Edit Profile</Button>
             </div>
           </div>
         </CardContent>
