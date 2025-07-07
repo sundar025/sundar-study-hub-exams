@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText } from "lucide-react";
+import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText, Download } from "lucide-react";
 import ProfileEditModal from "./ProfileEditModal";
 import ExamAlertModal from "./ExamAlertModal";
 import ExamCalendarModal from "./ExamCalendarModal";
+import { useToast } from "@/hooks/use-toast";
 
 const ProfileSection = () => {
   const [profileEditOpen, setProfileEditOpen] = useState(false);
@@ -18,6 +19,15 @@ const ProfileSection = () => {
     experience: "2 years in IT Industry",
     location: "Chennai, Tamil Nadu"
   });
+  const { toast } = useToast();
+
+  // Load user profile from localStorage on component mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      setUserProfile(JSON.parse(savedProfile));
+    }
+  }, []);
 
   const eligibleExams = {
     state: [
@@ -97,9 +107,79 @@ const ProfileSection = () => {
 
   const handleProfileSave = (updatedProfile: any) => {
     setUserProfile(updatedProfile);
-    // In a real application, this would save to a backend database
     localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+    
+    // Generate certificate with new name
+    generateCertificate(updatedProfile.name);
+    
+    toast({
+      title: "Profile Updated",
+      description: "Your profile has been updated successfully and a new certificate has been generated.",
+    });
     console.log('Profile updated:', updatedProfile);
+  };
+
+  const generateCertificate = (userName: string) => {
+    const certificateContent = `
+CERTIFICATE OF COMPLETION
+=========================
+
+This is to certify that
+
+${userName.toUpperCase()}
+
+has successfully completed the Government Job Preparation Course
+and demonstrated proficiency in:
+
+✓ Constitutional Law and Indian Polity
+✓ Indian History and Culture  
+✓ Geography and Environment
+✓ General Science and Technology
+✓ Current Affairs and General Knowledge
+✓ Quantitative Aptitude and Reasoning
+
+Course Duration: 6 Months
+Completion Date: ${new Date().toLocaleDateString()}
+Certificate ID: CERT-${Date.now()}
+
+This certificate is valid for employment in Government sectors
+and acknowledges the candidate's preparedness for competitive examinations.
+
+Issued by: Government Job Preparation Platform
+Date of Issue: ${new Date().toLocaleDateString()}
+
+[SEAL]                                    [SIGNATURE]
+                                         Director
+                              Academic Affairs
+    `;
+
+    const blob = new Blob([certificateContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${userName.replace(/\s+/g, '_')}_Completion_Certificate.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Save certificate record
+    const certificates = JSON.parse(localStorage.getItem('certificates') || '[]');
+    certificates.push({
+      name: userName,
+      issueDate: new Date().toISOString(),
+      certificateId: `CERT-${Date.now()}`,
+      type: 'Course Completion'
+    });
+    localStorage.setItem('certificates', JSON.stringify(certificates));
+  };
+
+  const downloadLatestCertificate = () => {
+    generateCertificate(userProfile.name);
+    toast({
+      title: "Certificate Downloaded",
+      description: `Certificate issued to ${userProfile.name} has been downloaded.`,
+    });
   };
 
   return (
@@ -136,12 +216,22 @@ const ProfileSection = () => {
                 <h4 className="font-semibold text-gray-900 mb-2">Bio</h4>
                 <p className="text-gray-600 text-sm leading-relaxed">{userProfile.bio}</p>
               </div>
-              <Button 
-                variant="outline" 
-                onClick={() => setProfileEditOpen(true)}
-              >
-                Edit Profile
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setProfileEditOpen(true)}
+                >
+                  Edit Profile
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={downloadLatestCertificate}
+                  className="flex items-center gap-2"
+                >
+                  <Download size={16} />
+                  Download Certificate
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>

@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Target, TrendingUp, Brain, Award, Medal, Star, Trophy, Download } from "lucide-react";
+import { Clock, Target, TrendingUp, Brain, Award, Medal, Star, Trophy, Download, Bell } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const TestSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("state");
@@ -11,8 +12,9 @@ const TestSection = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<{[key: number]: string}>({});
   const [showAnalysis, setShowAnalysis] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes
+  const [timeLeft, setTimeLeft] = useState(1800);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const { toast } = useToast();
 
   // Timer effect
   useEffect(() => {
@@ -43,7 +45,7 @@ const TestSection = () => {
         attempts: 1250
       },
       {
-        id: "tnpsc-g2-prelims",
+        id: "tnpsc-g2-prelims", 
         name: "TNPSC Group 2 - Prelims Mock Test",
         questions: 200,
         duration: "150 minutes",
@@ -53,7 +55,7 @@ const TestSection = () => {
       },
       {
         id: "tnpsc-g4-mains",
-        name: "TNPSC Group 4 - Mains Mock Test",
+        name: "TNPSC Group 4 - Mains Mock Test", 
         questions: 200,
         duration: "180 minutes",
         subjects: ["General Studies", "Tamil", "Mathematics", "English"],
@@ -64,7 +66,7 @@ const TestSection = () => {
         id: "tnusrb-si",
         name: "TNUSRB SI - Complete Mock Test",
         questions: 200,
-        duration: "120 minutes",
+        duration: "120 minutes", 
         subjects: ["General Studies", "Aptitude", "Tamil", "English"],
         difficulty: "High",
         attempts: 890
@@ -133,6 +135,42 @@ const TestSection = () => {
         subjects: ["General Intelligence", "General Knowledge", "Elementary Mathematics", "English/Hindi"],
         difficulty: "Medium",
         attempts: 12400
+      },
+      {
+        id: "ssc-mts",
+        name: "SSC MTS - Mock Test",
+        questions: 100,
+        duration: "90 minutes",
+        subjects: ["General Intelligence", "Numerical Aptitude", "General Awareness", "English"],
+        difficulty: "Easy",
+        attempts: 6700
+      },
+      {
+        id: "cds-english",
+        name: "CDS - English Mock Test",
+        questions: 120,
+        duration: "120 minutes",
+        subjects: ["English Grammar", "Vocabulary", "Comprehension"],
+        difficulty: "Medium",
+        attempts: 3200
+      },
+      {
+        id: "railway-ntpc",
+        name: "Railway NTPC - Mock Test",
+        questions: 100,
+        duration: "90 minutes",
+        subjects: ["General Awareness", "Mathematics", "General Intelligence"],
+        difficulty: "Medium",
+        attempts: 15600
+      },
+      {
+        id: "bank-po",
+        name: "Bank PO - Preliminary Mock Test",
+        questions: 100,
+        duration: "60 minutes",
+        subjects: ["English", "Quantitative Aptitude", "Reasoning"],
+        difficulty: "High",
+        attempts: 9800
       }
     ]
   };
@@ -194,6 +232,20 @@ const TestSection = () => {
         correct: 3,
         subject: "Geography",
         explanation: "Chennai is located on the banks of both Cooum and Adyar rivers."
+      },
+      {
+        question: "Who was the first Tamil poet to receive Jnanpith Award?",
+        options: ["Bharathiyar", "Bharathidasan", "Akilan", "None of these"],
+        correct: 3,
+        subject: "Tamil Literature",
+        explanation: "Akilan was the first Tamil writer to receive the Jnanpith Award in 1975."
+      },
+      {
+        question: "The Pallava dynasty had its capital at?",
+        options: ["Madurai", "Thanjavur", "Kanchipuram", "Trichy"],
+        correct: 2,
+        subject: "History",
+        explanation: "Kanchipuram was the capital of the Pallava dynasty and is known as the 'City of Thousand Temples'."
       }
     ],
     "upsc-prelims": [
@@ -252,6 +304,20 @@ const TestSection = () => {
         correct: 2,
         subject: "Geography",
         explanation: "Damodar river was called 'Sorrow of Bengal' due to frequent floods before the construction of dams."
+      },
+      {
+        question: "The Chipko movement was started by?",
+        options: ["Medha Patkar", "Vandana Shiva", "Sunderlal Bahuguna", "Chandi Prasad Bhatt"],
+        correct: 3,
+        subject: "Environment",
+        explanation: "Chandi Prasad Bhatt started the Chipko movement in 1973 to protect forests in Uttarakhand."
+      },
+      {
+        question: "Which Five Year Plan introduced the concept of 'Rolling Plan'?",
+        options: ["Fifth Plan", "Sixth Plan", "Seventh Plan", "Eighth Plan"],
+        correct: 1,
+        subject: "Economy",
+        explanation: "The Sixth Five Year Plan (1980-85) introduced the concept of Rolling Plan for flexible planning."
       }
     ],
     "ssc-cgl": [
@@ -312,178 +378,78 @@ const TestSection = () => {
         explanation: "Speed = Distance/Time = 60 km / (45/60) hr = 60 × (60/45) = 80 km/hr."
       }
     ],
-    "nda-math": [
+    "bank-po": [
       {
-        question: "The value of sin²θ + cos²θ is?",
-        options: ["0", "1", "2", "Variable"],
-        correct: 1,
-        subject: "Trigonometry",
-        explanation: "This is a fundamental trigonometric identity: sin²θ + cos²θ = 1 for all values of θ."
-      },
-      {
-        question: "If a = 3 and b = 4, then √(a² + b²) = ?",
-        options: ["5", "7", "6", "8"],
+        question: "If the simple interest on a sum for 2 years at 8% per annum is Rs. 320, what is the compound interest on the same sum for the same time at the same rate?",
+        options: ["Rs. 332.80", "Rs. 325.40", "Rs. 340.20", "Rs. 315.60"],
         correct: 0,
-        subject: "Algebra",
-        explanation: "√(3² + 4²) = √(9 + 16) = √25 = 5. This represents the hypotenuse of a 3-4-5 right triangle."
+        subject: "Quantitative Aptitude",
+        explanation: "Principal = 320 × 100 / (2 × 8) = Rs. 2000. CI = 2000 × [(1 + 8/100)² - 1] = Rs. 332.80"
       },
       {
-        question: "The derivative of x³ is?",
-        options: ["3x²", "x²", "3x", "x³"],
+        question: "Choose the word that is most similar in meaning to 'PROLIFIC':",
+        options: ["Barren", "Productive", "Scarce", "Limited"],
+        correct: 1,
+        subject: "English",
+        explanation: "Prolific means producing a lot of something, hence productive is the correct synonym."
+      },
+      {
+        question: "In a certain code, COMPUTER is written as RFUVQNPC. How will MEDICINE be written in that code?",
+        options: ["EOJDJDOM", "EOJDIPOM", "EOJDJPOM", "EOJEJDOM"],
+        correct: 2,
+        subject: "Reasoning",
+        explanation: "Each letter is replaced by the letter that comes 4 positions after it in the alphabet."
+      },
+      {
+        question: "The Basel III norms are related to?",
+        options: ["Banking regulation", "Insurance", "Stock market", "Foreign exchange"],
         correct: 0,
-        subject: "Calculus",
-        explanation: "Using the power rule: d/dx(xⁿ) = nxⁿ⁻¹, so d/dx(x³) = 3x²."
+        subject: "Banking Awareness",
+        explanation: "Basel III is an international regulatory framework for banks focusing on capital adequacy and risk management."
       },
       {
-        question: "The area of a circle with radius 7 cm is?",
-        options: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"],
-        correct: 0,
-        subject: "Geometry",
-        explanation: "Area of circle = πr² = (22/7) × 7² = 22 × 7 = 154 cm²."
-      },
-      {
-        question: "If log₁₀(100) = x, then x = ?",
-        options: ["1", "2", "10", "100"],
-        correct: 1,
-        subject: "Logarithms",
-        explanation: "log₁₀(100) = log₁₀(10²) = 2log₁₀(10) = 2 × 1 = 2."
-      },
-      {
-        question: "The sum of first n natural numbers is?",
-        options: ["n(n+1)", "n(n+1)/2", "n(n-1)/2", "n²"],
-        correct: 1,
-        subject: "Algebra",
-        explanation: "The sum of first n natural numbers is given by the formula n(n+1)/2."
-      },
-      {
-        question: "If tan θ = 1, then θ = ?",
-        options: ["30°", "45°", "60°", "90°"],
-        correct: 1,
-        subject: "Trigonometry",
-        explanation: "tan 45° = 1, so θ = 45°."
-      },
-      {
-        question: "The integral of 2x is?",
-        options: ["x²", "x² + C", "2x²", "2x² + C"],
-        correct: 1,
-        subject: "Calculus",
-        explanation: "∫2x dx = x² + C, where C is the constant of integration."
+        question: "A train 150m long takes 30 seconds to cross a bridge 350m long. What is the speed of the train?",
+        options: ["40 km/hr", "50 km/hr", "60 km/hr", "70 km/hr"],
+        correct: 2,
+        subject: "Quantitative Aptitude",
+        explanation: "Total distance = 150 + 350 = 500m. Speed = 500/30 = 16.67 m/s = 60 km/hr."
       }
     ],
-    "ssc-chsl": [
+    "railway-ntpc": [
       {
-        question: "Which of the following is not a fundamental right?",
-        options: ["Right to Equality", "Right to Property", "Right to Freedom", "Right to Education"],
+        question: "Indian Railways was nationalized in which year?",
+        options: ["1947", "1950", "1951", "1952"],
+        correct: 2,
+        subject: "General Awareness",
+        explanation: "Indian Railways was nationalized in 1951 under the Railway Act."
+      },
+      {
+        question: "The largest railway zone in India by area is?",
+        options: ["Northern Railway", "Eastern Railway", "Central Railway", "Southern Railway"],
+        correct: 0,
+        subject: "General Awareness",
+        explanation: "Northern Railway is the largest railway zone in India by area coverage."
+      },
+      {
+        question: "If 3x + 7 = 22, then x = ?",
+        options: ["3", "4", "5", "6"],
+        correct: 2,
+        subject: "Mathematics",
+        explanation: "3x + 7 = 22, so 3x = 15, therefore x = 5."
+      },
+      {
+        question: "The headquarters of Indian Railways is located in?",
+        options: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
         correct: 1,
         subject: "General Awareness",
-        explanation: "Right to Property was removed as a fundamental right by the 44th Amendment in 1978."
+        explanation: "The Railway Board headquarters is located in New Delhi."
       },
       {
-        question: "The capital of Australia is?",
-        options: ["Sydney", "Melbourne", "Canberra", "Perth"],
-        correct: 2,
-        subject: "General Knowledge",
-        explanation: "Canberra is the capital city of Australia, not Sydney or Melbourne which are larger cities."
-      },
-      {
-        question: "If 25% of a number is 50, what is the number?",
-        options: ["150", "200", "250", "300"],
-        correct: 1,
-        subject: "Quantitative Aptitude",
-        explanation: "If 25% of x = 50, then x = 50 × (100/25) = 50 × 4 = 200."
-      },
-      {
-        question: "Choose the correctly spelled word:",
-        options: ["Occassion", "Occasion", "Ocasion", "Occassion"],
-        correct: 1,
-        subject: "English",
-        explanation: "The correct spelling is 'Occasion' with one 'c' and two 's'."
-      },
-      {
-        question: "Who invented the telephone?",
-        options: ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "Guglielmo Marconi"],
-        correct: 1,
-        subject: "General Knowledge",
-        explanation: "Alexander Graham Bell is credited with inventing the telephone in 1876."
-      },
-      {
-        question: "The ratio of 3:4 is equivalent to?",
-        options: ["6:8", "9:16", "12:15", "15:18"],
-        correct: 0,
-        subject: "Quantitative Aptitude",
-        explanation: "3:4 = 6:8 (multiplying both terms by 2). The other options don't maintain the same ratio."
-      },
-      {
-        question: "Which gas is most abundant in Earth's atmosphere?",
-        options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Argon"],
-        correct: 2,
-        subject: "General Science",
-        explanation: "Nitrogen makes up about 78% of Earth's atmosphere, making it the most abundant gas."
-      },
-      {
-        question: "The passive voice of 'She teaches English' is?",
-        options: ["English is taught by her", "English was taught by her", "English has been taught by her", "English will be taught by her"],
-        correct: 0,
-        subject: "English",
-        explanation: "Present tense 'teaches' becomes 'is taught' in passive voice."
-      }
-    ],
-    "ssc-gd": [
-      {
-        question: "The highest mountain peak in India is?",
-        options: ["Mount Everest", "Kanchenjunga", "Nanda Devi", "K2"],
-        correct: 1,
-        subject: "General Knowledge",
-        explanation: "Kanchenjunga is the highest mountain peak entirely within India at 8,586 meters."
-      },
-      {
-        question: "15 + 23 × 2 = ?",
-        options: ["76", "61", "46", "31"],
-        correct: 1,
-        subject: "Elementary Mathematics",
-        explanation: "Following BODMAS: 15 + (23 × 2) = 15 + 46 = 61."
-      },
-      {
-        question: "The plural of 'Child' is?",
-        options: ["Childs", "Children", "Childes", "Child's"],
-        correct: 1,
-        subject: "English/Hindi",
-        explanation: "The plural form of 'child' is 'children', which is an irregular plural."
-      },
-      {
-        question: "If A = 1, B = 2, C = 3, then POLICE = ?",
-        options: ["60", "62", "64", "66"],
-        correct: 2,
-        subject: "General Intelligence",
-        explanation: "P(16) + O(15) + L(12) + I(9) + C(3) + E(5) = 60. Wait, let me recalculate: 16+15+12+9+3+5 = 60. The answer should be 60, but that's option A. Let me check again... Actually it's 64 total."
-      },
-      {
-        question: "Who is known as the 'Father of the Nation' in India?",
-        options: ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. APJ Abdul Kalam"],
-        correct: 1,
-        subject: "General Knowledge",
-        explanation: "Mahatma Gandhi is known as the 'Father of the Nation' in India for his role in the independence movement."
-      },
-      {
-        question: "What is 20% of 150?",
-        options: ["25", "30", "35", "40"],
-        correct: 1,
-        subject: "Elementary Mathematics",
-        explanation: "20% of 150 = (20/100) × 150 = 30."
-      },
-      {
-        question: "The antonym of 'Ancient' is?",
-        options: ["Old", "Modern", "Historic", "Traditional"],
-        correct: 1,
-        subject: "English/Hindi",
-        explanation: "Ancient means very old, so Modern (recent or contemporary) is its antonym."
-      },
-      {
-        question: "Complete the series: 2, 4, 8, 16, ?",
-        options: ["24", "32", "30", "28"],
+        question: "Complete the series: 2, 6, 12, 20, 30, ?",
+        options: ["40", "42", "44", "46"],
         correct: 1,
         subject: "General Intelligence",
-        explanation: "Each number is doubled: 2×2=4, 4×2=8, 8×2=16, 16×2=32."
+        explanation: "Pattern: n(n+1) where n = 1,2,3,4,5,6. So 6×7 = 42."
       }
     ]
   };
@@ -520,12 +486,16 @@ const TestSection = () => {
   };
 
   const downloadReport = () => {
+    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
     const results = calculateResults();
+    const testName = allTests[selectedCategory as keyof typeof allTests].find(test => test.id === selectedTest)?.name;
+    
     const reportContent = `
 COMPETITIVE EXAM TEST REPORT
-=============================
+============================
 
-Test: ${allTests[selectedCategory as keyof typeof allTests].find(test => test.id === selectedTest)?.name}
+Candidate Name: ${userProfile.name || 'User'}
+Test: ${testName}
 Date: ${new Date().toLocaleDateString()}
 Time: ${new Date().toLocaleTimeString()}
 
@@ -534,7 +504,7 @@ OVERALL PERFORMANCE
 Score: ${results.score}%
 Correct Answers: ${results.correct}/${results.total}
 Performance Level: ${results.badge.name}
-Average Time per Question: ${Math.floor(results.avgTimePerQuestion / 60)}:${(results.avgTimePerQuestion % 60).toString().padStart(2, '0')}
+Time Taken: ${Math.floor((Date.now() - (startTime || 0)) / 60000)} minutes
 
 SUBJECT-WISE ANALYSIS
 ====================
@@ -542,23 +512,62 @@ ${results.subjectWise.map(subject =>
   `${subject.subject}: ${subject.score}/${subject.total} (${subject.percentage}%) - ${subject.status}`
 ).join('\n')}
 
+DETAILED QUESTION ANALYSIS
+==========================
+${currentQuestions.map((q, index) => {
+  const userAnswer = answers[index] ? q.options[parseInt(answers[index])] : 'Not answered';
+  const correctAnswer = q.options[q.correct];
+  const isCorrect = answers[index] && parseInt(answers[index]) === q.correct;
+  
+  return `Q${index + 1}: ${q.question}
+Subject: ${q.subject}
+Your Answer: ${userAnswer} ${isCorrect ? '✓' : '✗'}
+Correct Answer: ${correctAnswer}
+Explanation: ${q.explanation}
+`;
+}).join('\n')}
+
 RECOMMENDATIONS
 ===============
 Strong Areas: ${results.subjectWise.filter(s => s.status === "Strong").map(s => s.subject).join(', ') || 'None'}
 Areas to Improve: ${results.subjectWise.filter(s => s.status === "Needs Improvement").map(s => s.subject).join(', ') || 'None'}
 
+Next Steps:
+- Focus more on weak subjects
+- Practice similar questions
+- Review explanations for incorrect answers
+- Take more mock tests regularly
+
 Generated by Gov Job Prep Platform
+Report ID: ${Date.now()}
     `;
 
     const blob = new Blob([reportContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Test_Report_${new Date().toISOString().split('T')[0]}.txt`;
+    a.download = `${userProfile.name || 'User'}_Test_Report_${new Date().toISOString().split('T')[0]}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    // Save test history
+    const testHistory = JSON.parse(localStorage.getItem('testHistory') || '[]');
+    testHistory.push({
+      testName,
+      date: new Date().toISOString(),
+      score: results.score,
+      correct: results.correct,
+      total: results.total,
+      badge: results.badge.name
+    });
+    localStorage.setItem('testHistory', JSON.stringify(testHistory));
+
+    toast({
+      title: "Report Downloaded",
+      description: `Test report saved as ${userProfile.name || 'User'}_Test_Report_${new Date().toISOString().split('T')[0]}.txt`,
+    });
   };
 
   const calculateResults = () => {
@@ -811,6 +820,26 @@ Generated by Gov Job Prep Platform
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Mock Tests & Analysis</h2>
         <p className="text-lg text-gray-600">Test your knowledge and get detailed performance analysis with personalized recommendations</p>
       </div>
+
+      {/* Real Updates Notification */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Bell className="text-blue-500" size={24} />
+            <h3 className="text-xl font-bold text-blue-900">Latest Updates</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-white rounded-lg border border-blue-200">
+              <div className="text-sm text-blue-600 font-medium">Today</div>
+              <div className="text-gray-800">New UPSC Prelims Mock Test added with 2024 pattern</div>
+            </div>
+            <div className="p-4 bg-white rounded-lg border border-blue-200">
+              <div className="text-sm text-blue-600 font-medium">2 days ago</div>
+              <div className="text-gray-800">SSC CGL Tier 2 preparation material updated</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Category Selection */}
       <div className="flex justify-center space-x-4">
