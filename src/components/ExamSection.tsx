@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookOpen, Clock, Users, Award, Play, FileText, Activity, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import StudyMaterialSection from "./StudyMaterialSection";
 
 const ExamSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
   const [showPhysicalTest, setShowPhysicalTest] = useState(false);
+  const [showStudyMaterial, setShowStudyMaterial] = useState(false);
   const [physicalTestData, setPhysicalTestData] = useState({
     height: "",
     chest: "",
@@ -31,7 +33,7 @@ const ExamSection = () => {
       color: "bg-red-500"
     },
     {
-      name: "TNPSC Group 2",
+      name: "TNPSC Group 2", 
       pattern: ["Prelims", "Mains"],
       description: "Tamil Nadu Public Service Commission Group 2 Services",
       subjects: ["General Studies", "Tamil", "Aptitude", "Current Affairs"],
@@ -42,7 +44,7 @@ const ExamSection = () => {
     {
       name: "TNPSC Group 4",
       pattern: ["Mains Only"],
-      description: "Tamil Nadu Public Service Commission Group 4 Services",
+      description: "Tamil Nadu Public Service Commission Group 4 Services", 
       subjects: ["General Studies", "Tamil", "Mathematics", "General English"],
       duration: "6 months preparation",
       difficulty: "Medium",
@@ -163,7 +165,6 @@ const ExamSection = () => {
   };
 
   const savePhysicalTestData = () => {
-    // In a real app, this would save to a database
     localStorage.setItem('physicalTestData', JSON.stringify(physicalTestData));
     toast({
       title: "Data Saved",
@@ -173,24 +174,14 @@ const ExamSection = () => {
 
   const currentExams = selectedCategory === "state" ? stateExams : centralExams;
 
-  const studyMaterials = {
-    "General Studies": [
-      { title: "Indian Polity by Laxmikant", type: "Book", url: "#" },
-      { title: "Modern India by Bipan Chandra", type: "Book", url: "#" },
-      { title: "Geography Video Lectures", type: "Video", url: "#" },
-      { title: "Current Affairs Monthly Magazine", type: "PDF", url: "#" }
-    ],
-    "Mathematics": [
-      { title: "Quantitative Aptitude by R.S. Aggarwal", type: "Book", url: "#" },
-      { title: "Mathematics Video Series", type: "Video", url: "#" },
-      { title: "Previous Year Questions", type: "PDF", url: "#" }
-    ],
-    "English": [
-      { title: "Objective General English by S.P. Bakshi", type: "Book", url: "#" },
-      { title: "English Grammar Videos", type: "Video", url: "#" },
-      { title: "Vocabulary Building", type: "PDF", url: "#" }
-    ]
-  };
+  if (showStudyMaterial && selectedExam) {
+    return (
+      <StudyMaterialSection 
+        examName={selectedExam}
+        onBack={() => setShowStudyMaterial(false)}
+      />
+    );
+  }
 
   if (showPhysicalTest) {
     return (
@@ -349,59 +340,6 @@ const ExamSection = () => {
     );
   }
 
-  if (selectedExam) {
-    const exam = currentExams.find(e => e.name === selectedExam);
-    return (
-      <div className="space-y-8">
-        <div className="flex items-center gap-4 mb-6">
-          <Button onClick={() => setSelectedExam(null)} variant="outline">
-            ← Back to Exams
-          </Button>
-          <h2 className="text-3xl font-bold text-gray-900">{exam?.name} - Study Materials</h2>
-          {selectedExam === "TNUSRB SI" && (
-            <Button onClick={() => setShowPhysicalTest(true)} variant="outline" className="ml-auto">
-              <Activity className="mr-2" size={16} />
-              Physical Test Requirements
-            </Button>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {exam?.subjects.map((subject, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="text-blue-500" />
-                  {subject}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {(studyMaterials[subject as keyof typeof studyMaterials] || [
-                  { title: "Study Notes", type: "PDF", url: "#" },
-                  { title: "Video Lectures", type: "Video", url: "#" },
-                  { title: "Practice Questions", type: "PDF", url: "#" }
-                ]).map((material, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      {material.type === "Video" && <Play className="text-red-500" size={20} />}
-                      {material.type === "Book" && <BookOpen className="text-blue-500" size={20} />}
-                      {material.type === "PDF" && <FileText className="text-green-500" size={20} />}
-                      <div>
-                        <p className="font-medium">{material.title}</p>
-                        <p className="text-sm text-gray-500">{material.type}</p>
-                      </div>
-                    </div>
-                    <Button size="sm" variant="outline">Access</Button>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -463,13 +401,31 @@ const ExamSection = () => {
                 </div>
               </div>
               
-              <Button 
-                className="w-full mt-4" 
-                size="lg"
-                onClick={() => setSelectedExam(exam.name)}
-              >
-                Start Preparation
-              </Button>
+              <div className="space-y-2">
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => {
+                    setSelectedExam(exam.name);
+                    setShowStudyMaterial(true);
+                  }}
+                >
+                  Start Preparation
+                </Button>
+                {exam.name === "TNUSRB SI" && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedExam(exam.name);
+                      setShowPhysicalTest(true);
+                    }}
+                  >
+                    <Activity className="mr-2" size={16} />
+                    Physical Test Info
+                  </Button>
+                )}
+              </div>
             </CardContent>
           </Card>
         ))}
