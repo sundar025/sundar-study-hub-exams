@@ -14,7 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      certificates: {
+        Row: {
+          certificate_data: Json | null
+          certificate_type: string
+          created_at: string
+          id: string
+          issued_date: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          certificate_data?: Json | null
+          certificate_type?: string
+          created_at?: string
+          id?: string
+          issued_date?: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          certificate_data?: Json | null
+          certificate_type?: string
+          created_at?: string
+          id?: string
+          issued_date?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_sessions: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          id: string
+          session_date: string
+          subject: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes: number
+          id?: string
+          session_date?: string
+          subject: string
+          topic: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          session_date?: string
+          subject?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          completed: boolean
+          completion_date: string | null
+          created_at: string
+          id: string
+          study_time_minutes: number | null
+          subject: string
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completion_date?: string | null
+          created_at?: string
+          id?: string
+          study_time_minutes?: number | null
+          subject: string
+          topic: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completion_date?: string | null
+          created_at?: string
+          id?: string
+          study_time_minutes?: number | null
+          subject?: string
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
