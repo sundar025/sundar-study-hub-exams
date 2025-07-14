@@ -1,184 +1,445 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { BookOpen, Users, Trophy, Calendar, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { BookOpen, Clock, Users, Award, Play, FileText, Activity, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import StudyMaterialSection from "./StudyMaterialSection";
-import { useProgress } from "@/hooks/useProgress";
-import { useAuth } from "@/hooks/useAuth";
 
 const ExamSection = () => {
+  const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
-  const { getSubjectProgress } = useProgress();
-  const { user } = useAuth();
+  const [showPhysicalTest, setShowPhysicalTest] = useState(false);
+  const [showStudyMaterial, setShowStudyMaterial] = useState(false);
+  const [physicalTestData, setPhysicalTestData] = useState({
+    height: "",
+    chest: "",
+    runningTime: "",
+    longJumpDistance: "",
+    notes: ""
+  });
+  const { toast } = useToast();
 
-  const exams = [
+  const stateExams = [
     {
       name: "TNPSC Group 1",
-      category: "State Government",
+      pattern: ["Prelims", "Mains"],
       description: "Tamil Nadu Public Service Commission Group 1 Services",
-      subjects: ["Tamil", "English", "General Studies", "Current Affairs", "Aptitude"],
-      nextExamDate: "2024-06-15",
-      totalCandidates: "2,50,000+",
-      difficulty: "High"
+      subjects: ["General Studies", "Tamil", "English", "Current Affairs"],
+      duration: "12 months preparation",
+      difficulty: "High",
+      color: "bg-red-500"
     },
     {
-      name: "TNPSC Group 2",
-      category: "State Government", 
+      name: "TNPSC Group 2", 
+      pattern: ["Prelims", "Mains"],
       description: "Tamil Nadu Public Service Commission Group 2 Services",
-      subjects: ["Tamil", "English", "General Studies", "Current Affairs"],
-      nextExamDate: "2024-05-20",
-      totalCandidates: "5,00,000+",
-      difficulty: "Medium"
+      subjects: ["General Studies", "Tamil", "Aptitude", "Current Affairs"],
+      duration: "8 months preparation",
+      difficulty: "Medium",
+      color: "bg-orange-500"
     },
     {
       name: "TNPSC Group 4",
-      category: "State Government",
-      description: "Tamil Nadu Public Service Commission Group 4 Services",
-      subjects: ["Tamil", "English", "General Studies", "Maths"],
-      nextExamDate: "2024-07-10",
-      totalCandidates: "8,00,000+", 
-      difficulty: "Medium"
+      pattern: ["Mains Only"],
+      description: "Tamil Nadu Public Service Commission Group 4 Services", 
+      subjects: ["General Studies", "Tamil", "Mathematics", "General English"],
+      duration: "6 months preparation",
+      difficulty: "Medium",
+      color: "bg-green-500"
     },
     {
-      name: "SSC CGL",
-      category: "Central Government",
-      description: "Staff Selection Commission Combined Graduate Level",
-      subjects: ["General Intelligence", "General Awareness", "Quantitative Aptitude", "English"],
-      nextExamDate: "2024-08-05",
-      totalCandidates: "25,00,000+",
-      difficulty: "High"
-    },
-    {
-      name: "SSC CHSL",
-      category: "Central Government", 
-      description: "Staff Selection Commission Combined Higher Secondary Level",
-      subjects: ["General Intelligence", "General Awareness", "Quantitative Aptitude", "English"],
-      nextExamDate: "2024-09-12",
-      totalCandidates: "15,00,000+",
-      difficulty: "Medium"
-    },
-    {
-      name: "Banking PO",
-      category: "Banking",
-      description: "Probationary Officer in Public Sector Banks",
-      subjects: ["Reasoning", "Quantitative Aptitude", "English", "General Awareness", "Computer"],
-      nextExamDate: "2024-06-28",
-      totalCandidates: "12,00,000+",
-      difficulty: "High"
+      name: "TNUSRB SI",
+      pattern: ["Mains", "Physical"],
+      description: "Tamil Nadu Uniformed Services Recruitment Board Sub Inspector",
+      subjects: ["General Studies", "Aptitude", "Tamil", "English"],
+      duration: "10 months preparation",
+      difficulty: "High",
+      color: "bg-blue-500"
     }
   ];
 
-  const getOverallProgress = (subjects: string[]) => {
-    if (!user) return 0;
-    
-    const totalProgress = subjects.reduce((acc, subject) => {
-      const progress = getSubjectProgress(subject);
-      return acc + progress.percentage;
-    }, 0);
-    
-    return subjects.length > 0 ? totalProgress / subjects.length : 0;
+  const centralExams = [
+    {
+      name: "UPSC Civil Services",
+      pattern: ["Prelims", "Mains", "Interview"],
+      description: "Union Public Service Commission Civil Services Examination",
+      subjects: ["History", "Geography", "Polity", "Economy", "Environment", "Current Affairs"],
+      duration: "18 months preparation",
+      difficulty: "Very High",
+      color: "bg-purple-600"
+    },
+    {
+      name: "UPSC Assistant Commandant",
+      pattern: ["Written", "Interview", "Medical"],
+      description: "CAPF Assistant Commandant Examination",
+      subjects: ["General Ability", "General Studies", "Essay Writing"],
+      duration: "12 months preparation",
+      difficulty: "High",
+      color: "bg-indigo-600"
+    },
+    {
+      name: "SSC GD",
+      pattern: ["CBE", "Physical", "Medical"],
+      description: "Staff Selection Commission General Duty Constable",
+      subjects: ["General Intelligence", "General Knowledge", "Elementary Mathematics", "English"],
+      duration: "6 months preparation",
+      difficulty: "Medium",
+      color: "bg-cyan-500"
+    },
+    {
+      name: "SSC CGL",
+      pattern: ["Tier 1", "Tier 2", "Tier 3"],
+      description: "Staff Selection Commission Combined Graduate Level",
+      subjects: ["General Intelligence", "General Awareness", "Quantitative Aptitude", "English"],
+      duration: "10 months preparation",
+      difficulty: "High",
+      color: "bg-emerald-500"
+    },
+    {
+      name: "SSC CHSL",
+      pattern: ["Tier 1", "Tier 2"],
+      description: "Staff Selection Commission Combined Higher Secondary Level",
+      subjects: ["General Intelligence", "General Awareness", "Quantitative Aptitude", "English"],
+      duration: "8 months preparation",
+      difficulty: "Medium",
+      color: "bg-yellow-500"
+    },
+    {
+      name: "SSC MTS",
+      pattern: ["Paper 1", "Paper 2"],
+      description: "Staff Selection Commission Multi Tasking Staff",
+      subjects: ["General Intelligence", "Numerical Aptitude", "General Awareness", "English"],
+      duration: "4 months preparation",
+      difficulty: "Easy",
+      color: "bg-pink-500"
+    },
+    {
+      name: "CAPF SI",
+      pattern: ["Paper 1", "Paper 2", "Physical", "Medical"],
+      description: "Central Armed Police Forces Sub Inspector",
+      subjects: ["General Intelligence", "General Knowledge", "Quantitative Aptitude", "English"],
+      duration: "8 months preparation",
+      difficulty: "Medium",
+      color: "bg-rose-500"
+    },
+    {
+      name: "NDA",
+      pattern: ["Written", "SSB Interview"],
+      description: "National Defence Academy Examination",
+      subjects: ["Mathematics", "General Ability Test"],
+      duration: "12 months preparation",
+      difficulty: "High",
+      color: "bg-slate-600"
+    },
+    {
+      name: "CDS",
+      pattern: ["Written", "SSB Interview"],
+      description: "Combined Defence Services Examination",
+      subjects: ["English", "General Knowledge", "Elementary Mathematics"],
+      duration: "10 months preparation",
+      difficulty: "High",
+      color: "bg-amber-600"
+    }
+  ];
+
+  const physicalTestRequirements = {
+    height: {
+      men: "170 cm minimum",
+      women: "160 cm minimum"
+    },
+    chest: {
+      men: "81 cm minimum (86 cm expanded)",
+      women: "79 cm minimum"
+    },
+    running: {
+      men: "1600m in 5 minutes 30 seconds",
+      women: "1600m in 6 minutes 30 seconds"
+    },
+    longJump: {
+      men: "4.20 meters minimum",
+      women: "3.50 meters minimum"
+    }
   };
 
-  if (selectedExam) {
+  const savePhysicalTestData = () => {
+    localStorage.setItem('physicalTestData', JSON.stringify(physicalTestData));
+    toast({
+      title: "Data Saved",
+      description: "Your physical test measurements have been saved successfully.",
+    });
+  };
+
+  const currentExams = selectedCategory === "state" ? stateExams : centralExams;
+
+  if (showStudyMaterial && selectedExam) {
     return (
       <StudyMaterialSection 
         examName={selectedExam}
-        onBack={() => setSelectedExam(null)}
+        onBack={() => setShowStudyMaterial(false)}
       />
+    );
+  }
+
+  if (showPhysicalTest) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center gap-4 mb-6">
+          <Button onClick={() => setShowPhysicalTest(false)} variant="outline">
+            ← Back to Exams
+          </Button>
+          <h2 className="text-3xl font-bold text-gray-900">TNUSRB SI - Physical Test Requirements</h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Requirements Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="text-blue-500" />
+                Physical Test Standards
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Height Requirements</h4>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.height.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.height.women}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Chest Measurements</h4>
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.chest.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.chest.women}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Running Test</h4>
+                <div className="bg-orange-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.running.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.running.women}</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-3">Long Jump</h4>
+                <div className="bg-purple-50 p-4 rounded-lg">
+                  <p className="font-medium">Men: {physicalTestRequirements.longJump.men}</p>
+                  <p className="font-medium">Women: {physicalTestRequirements.longJump.women}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Personal Tracking Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Save className="text-green-500" />
+                Track Your Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="height">Your Height (cm)</Label>
+                <Input
+                  id="height"
+                  type="number"
+                  placeholder="Enter your height"
+                  value={physicalTestData.height}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, height: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="chest">Chest Measurement (cm)</Label>
+                <Input
+                  id="chest"
+                  type="number"
+                  placeholder="Enter chest measurement"
+                  value={physicalTestData.chest}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, chest: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="running">1600m Running Time (mm:ss)</Label>
+                <Input
+                  id="running"
+                  type="text"
+                  placeholder="e.g., 05:20"
+                  value={physicalTestData.runningTime}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, runningTime: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="longjump">Long Jump Distance (meters)</Label>
+                <Input
+                  id="longjump"
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter distance in meters"
+                  value={physicalTestData.longJumpDistance}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, longJumpDistance: e.target.value}))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="notes">Personal Notes & Improvement Areas</Label>
+                <textarea
+                  id="notes"
+                  className="w-full p-3 border rounded-lg min-h-[100px]"
+                  placeholder="Note down your improvements, training schedule, areas to focus on..."
+                  value={physicalTestData.notes}
+                  onChange={(e) => setPhysicalTestData(prev => ({...prev, notes: e.target.value}))}
+                />
+              </div>
+
+              <Button onClick={savePhysicalTestData} className="w-full">
+                <Save className="mr-2" size={20} />
+                Save My Progress
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tips Section */}
+        <Card className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+          <CardContent className="p-6">
+            <h3 className="text-xl font-bold mb-4">Training Tips</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold mb-2">Running Improvement</h4>
+                <ul className="text-sm opacity-90 space-y-1">
+                  <li>• Start with 20-30 minutes daily jogging</li>
+                  <li>• Gradually increase pace and distance</li>
+                  <li>• Focus on breathing techniques</li>
+                  <li>• Track your time improvements weekly</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Long Jump Training</h4>
+                <ul className="text-sm opacity-90 space-y-1">
+                  <li>• Practice approach run consistency</li>
+                  <li>• Work on leg strength exercises</li>
+                  <li>• Focus on takeoff technique</li>
+                  <li>• Record each jump distance</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Government Exam Preparation</h2>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          Choose your target exam and start your preparation journey with our comprehensive study materials and progress tracking.
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Government Exam Preparation</h2>
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          Choose your target exam and start your preparation journey with our comprehensive study materials and practice tests.
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {exams.map((exam, index) => {
-          const overallProgress = getOverallProgress(exam.subjects);
-          
-          return (
-            <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl text-primary">{exam.name}</CardTitle>
-                  <Badge variant={exam.difficulty === "High" ? "destructive" : exam.difficulty === "Medium" ? "default" : "secondary"}>
-                    {exam.difficulty}
+      {/* Category Selection */}
+      <div className="flex justify-center space-x-4">
+        <Button
+          variant={selectedCategory === "state" ? "default" : "outline"}
+          onClick={() => setSelectedCategory("state")}
+          size="lg"
+        >
+          State Government Exams
+        </Button>
+        <Button
+          variant={selectedCategory === "central" ? "default" : "outline"}
+          onClick={() => setSelectedCategory("central")}
+          size="lg"
+        >
+          Central Government Exams
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {currentExams.map((exam, index) => (
+          <Card key={index} className="hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl font-bold text-gray-900">{exam.name}</CardTitle>
+                <div className={`w-4 h-4 rounded-full ${exam.color}`}></div>
+              </div>
+              <p className="text-gray-600 text-sm">{exam.description}</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                {exam.pattern.map((pattern, i) => (
+                  <Badge key={i} variant="secondary" className="bg-blue-100 text-blue-800">
+                    {pattern}
                   </Badge>
+                ))}
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <BookOpen size={16} />
+                  <span>Subjects: {exam.subjects.slice(0, 2).join(", ")}...</span>
                 </div>
-                <CardDescription className="text-sm text-muted-foreground">
-                  {exam.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{exam.nextExamDate}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-secondary" />
-                    <span className="font-medium">{exam.totalCandidates}</span>
-                  </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Clock size={16} />
+                  <span>{exam.duration}</span>
                 </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Study Progress</span>
-                    <span className="text-sm text-muted-foreground">{overallProgress.toFixed(0)}%</span>
-                  </div>
-                  <Progress value={overallProgress} className="h-2" />
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Award size={16} />
+                  <span>Difficulty: {exam.difficulty}</span>
                 </div>
-
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Subjects:</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {exam.subjects.map((subject, subIndex) => {
-                      const subjectProgress = getSubjectProgress(subject);
-                      const isCompleted = subjectProgress.percentage === 100;
-                      
-                      return (
-                        <Badge 
-                          key={subIndex} 
-                          variant={isCompleted ? "default" : "outline"}
-                          className="text-xs flex items-center gap-1"
-                        >
-                          {isCompleted && <CheckCircle className="h-3 w-3" />}
-                          {subject}
-                        </Badge>
-                      );
-                    })}
-                  </div>
-                </div>
-
+              </div>
+              
+              <div className="space-y-2">
                 <Button 
-                  onClick={() => setSelectedExam(exam.name)}
-                  className="w-full"
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => {
+                    setSelectedExam(exam.name);
+                    setShowStudyMaterial(true);
+                  }}
                 >
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Start Studying
+                  Start Preparation
                 </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
+                {exam.name === "TNUSRB SI" && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedExam(exam.name);
+                      setShowPhysicalTest(true);
+                    }}
+                  >
+                    <Activity className="mr-2" size={16} />
+                    Physical Test Info
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Why Choose section */}
-      <Card className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+      <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <CardContent className="p-8 text-center">
           <h3 className="text-2xl font-bold mb-4">Why Choose Our Study Hub?</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             <div className="text-center">
               <Users className="mx-auto mb-2" size={40} />
-              <h4 className="font-semibold">Expert Content</h4>
-              <p className="text-sm opacity-90">Curated by experienced educators</p>
+              <h4 className="font-semibold">Expert Faculty</h4>
+              <p className="text-sm opacity-90">Learn from experienced educators</p>
             </div>
             <div className="text-center">
               <BookOpen className="mx-auto mb-2" size={40} />
@@ -186,9 +447,9 @@ const ExamSection = () => {
               <p className="text-sm opacity-90">Complete syllabus coverage</p>
             </div>
             <div className="text-center">
-              <Trophy className="mx-auto mb-2" size={40} />
-              <h4 className="font-semibold">Progress Tracking</h4>
-              <p className="text-sm opacity-90">Monitor your learning journey</p>
+              <Award className="mx-auto mb-2" size={40} />
+              <h4 className="font-semibold">Success Track Record</h4>
+              <p className="text-sm opacity-90">Proven results and achievements</p>
             </div>
           </div>
         </CardContent>
