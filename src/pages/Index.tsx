@@ -1,7 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, Trophy, FileText, User } from "lucide-react";
+import { Home, Trophy, FileText, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import ExamSection from "@/components/ExamSection";
 import AchievementSection from "@/components/AchievementSection";
 import TestSection from "@/components/TestSection";
@@ -9,6 +11,34 @@ import ProfileSection from "@/components/ProfileSection";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
+  const { user, loading, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to auth
+  }
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -28,14 +58,30 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-lg border-b border-gray-200 text-center py-8">
+      <header className="bg-white shadow-lg border-b border-gray-200 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Competitive Exam Study Hub
-          </h1>
-          <p className="text-2xl text-gray-700 font-semibold">
-            பெரிதினும் பெரிது கேள்
-          </p>
+          <div className="flex items-center justify-between">
+            <div className="text-center flex-1">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
+                Competitive Exam Study Hub
+              </h1>
+              <p className="text-xl text-gray-700 font-semibold">
+                பெரிதினும் பெரிது கேள்
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                className="flex items-center gap-2"
+              >
+                <LogOut size={16} />
+                Sign Out
+              </Button>
+            </div>
+          </div>
         </div>
       </header>
 
