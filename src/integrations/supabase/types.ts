@@ -7,10 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.12 (cd3cf9e)"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
@@ -121,6 +121,42 @@ export type Database = {
           target_exam?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -286,6 +322,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      test_sessions: {
+        Row: {
+          answers: Json | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          score: number | null
+          started_at: string
+          test_id: string
+          time_remaining_minutes: number | null
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          score?: number | null
+          started_at?: string
+          test_id: string
+          time_remaining_minutes?: number | null
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          score?: number | null
+          started_at?: string
+          test_id?: string
+          time_remaining_minutes?: number | null
+          user_id?: string
+        }
+        Relationships: []
       }
       tests: {
         Row: {
@@ -454,7 +526,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_test_questions_for_session: {
+        Args: { test_session_id: string }
+        Returns: {
+          id: string
+          option_a: string
+          option_b: string
+          option_c: string
+          option_d: string
+          question_text: string
+        }[]
+      }
+      start_test_session: {
+        Args: { test_uuid: string }
+        Returns: string
+      }
+      submit_test_answers: {
+        Args: { submitted_answers: Json; test_session_id: string }
+        Returns: {
+          results: Json
+          score: number
+          total_questions: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
