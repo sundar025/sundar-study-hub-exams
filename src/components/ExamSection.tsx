@@ -6,9 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookOpen, Clock, Users, Award, Play, FileText, Activity, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import StudyMaterialSection from "./StudyMaterialSection";
 
 const ExamSection = () => {
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
   const [showPhysicalTest, setShowPhysicalTest] = useState(false);
@@ -164,12 +167,44 @@ const ExamSection = () => {
     }
   };
 
-  const savePhysicalTestData = () => {
-    localStorage.setItem('physicalTestData', JSON.stringify(physicalTestData));
-    toast({
-      title: "Data Saved",
-      description: "Your physical test measurements have been saved successfully.",
-    });
+  const savePhysicalTestData = async () => {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "Please log in to save your test data.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('physical_tests')
+        .insert({
+          user_id: user.id,
+          test_type: 'TNUSRB SI Physical Test',
+          height_cm: parseInt(physicalTestData.height) || null,
+          chest_normal_cm: parseInt(physicalTestData.chest) || null,
+          running_time_seconds: physicalTestData.runningTime ? parseInt(physicalTestData.runningTime) * 60 : null,
+          long_jump_meters: parseFloat(physicalTestData.longJumpDistance) || null
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Success!",
+        description: "Physical test data saved successfully to database.",
+      });
+    } catch (error) {
+      console.error('Error saving physical test data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save physical test data.",
+        variant: "destructive",
+      });
+    }
   };
 
   const currentExams = selectedCategory === "state" ? stateExams : centralExams;

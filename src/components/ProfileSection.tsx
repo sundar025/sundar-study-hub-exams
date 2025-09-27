@@ -1,34 +1,90 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText } from "lucide-react";
+import { User, GraduationCap, Calendar, Bell, ExternalLink, FileText, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import ProfileEditModal from "./ProfileEditModal";
 import ExamAlertModal from "./ExamAlertModal";
 import ExamCalendarModal from "./ExamCalendarModal";
 
 const ProfileSection = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   const [examAlertOpen, setExamAlertOpen] = useState(false);
   const [examCalendarOpen, setExamCalendarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState({
-    name: "Raj Kumar",
-    bio: "Passionate government job aspirant with strong analytical skills and dedication towards public service. Focused on clearing competitive exams and contributing to nation building.",
-    qualification: "B.E Computer Science",
-    experience: "2 years in IT Industry",
-    location: "Chennai, Tamil Nadu"
+    name: "",
+    bio: "",
+    qualification: "",
+    experience: "",
+    location: "",
+    phone: "",
+    email: ""
   });
 
-  const eligibleExams = {
-    state: [
-      "TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"
-    ],
-    central: [
-      "UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", 
-      "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"
-    ]
+  // Exam eligibility based on qualification
+  const getEligibleExams = (qualification: string) => {
+    const examsByQualification = {
+      "B.E Computer Science": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
+        central: ["UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]
+      },
+      "B.Tech": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
+        central: ["UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]
+      },
+      "B.Sc": {
+        state: ["TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
+        central: ["SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI"]
+      },
+      "B.Com": {
+        state: ["TNPSC Group 2", "TNPSC Group 4"],
+        central: ["SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS"]
+      },
+      "B.A": {
+        state: ["TNPSC Group 2", "TNPSC Group 4"],
+        central: ["SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS"]
+      },
+      "M.E": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
+        central: ["UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]
+      },
+      "M.Tech": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
+        central: ["UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]
+      },
+      "M.Sc": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
+        central: ["UPSC Civil Services", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI"]
+      },
+      "M.Com": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4"],
+        central: ["UPSC Civil Services", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS"]
+      },
+      "M.A": {
+        state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4"],
+        central: ["UPSC Civil Services", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS"]
+      },
+      "MBA": {
+        state: ["TNPSC Group 1", "TNPSC Group 2"],
+        central: ["UPSC Civil Services", "SSC CGL", "SSC CHSL"]
+      },
+      "PhD": {
+        state: ["TNPSC Group 1"],
+        central: ["UPSC Civil Services"]
+      }
+    };
+    
+    return examsByQualification[qualification as keyof typeof examsByQualification] || { state: [], central: [] };
   };
+
+  const eligibleExams = getEligibleExams(userProfile.qualification);
 
   const recentNews = [
     {
@@ -96,10 +152,117 @@ const ProfileSection = () => {
     return category === "Central" ? "bg-indigo-100 text-indigo-800" : "bg-emerald-100 text-emerald-800";
   };
 
-  const handleProfileSave = (newProfile: any) => {
-    setUserProfile(newProfile);
-    // Here you would typically save to backend
+  // Load user profile data
+  useEffect(() => {
+    if (user) {
+      loadUserProfile();
+    }
+  }, [user]);
+
+  const loadUserProfile = async () => {
+    if (!user) return;
+    
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error loading profile:', error);
+        // If no profile exists, create one with user's name from auth
+        const newProfile = {
+          user_id: user.id,
+          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
+          email: user.email || '',
+          bio: '',
+          qualification: '',
+          experience: '',
+          location: '',
+          phone: ''
+        };
+        
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert(newProfile);
+          
+        if (!insertError) {
+          setUserProfile({
+            name: newProfile.full_name,
+            email: newProfile.email,
+            bio: '',
+            qualification: '',
+            experience: '',
+            location: '',
+            phone: ''
+          });
+        }
+      } else if (profile) {
+        setUserProfile({
+          name: profile.full_name || '',
+          email: profile.email || '',
+          bio: profile.bio || '',
+          qualification: profile.qualification || '',
+          experience: profile.experience || '',
+          location: profile.location || '',
+          phone: profile.phone || ''
+        });
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load profile data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleProfileSave = async (newProfile: any) => {
+    if (!user) return;
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: newProfile.name,
+          bio: newProfile.bio,
+          qualification: newProfile.qualification,
+          experience: newProfile.experience,
+          location: newProfile.location,
+          phone: newProfile.phone
+        })
+        .eq('user_id', user.id);
+
+      if (error) {
+        throw error;
+      }
+
+      setUserProfile(newProfile);
+      toast({
+        title: "Success",
+        description: "Profile updated successfully",
+      });
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save profile",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -116,26 +279,38 @@ const ProfileSection = () => {
               <User className="text-white" size={40} />
             </div>
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{userProfile.name}</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                {userProfile.name || "Please update your profile"}
+              </h3>
               <div className="space-y-3 mb-4">
-                <div className="flex items-center gap-2">
-                  <GraduationCap className="text-blue-500" size={20} />
-                  <span className="text-gray-700">{userProfile.qualification}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FileText className="text-green-500" size={20} />
-                  <span className="text-gray-700">{userProfile.experience}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <User className="text-purple-500" size={20} />
-                  <span className="text-gray-700">{userProfile.location}</span>
-                </div>
+                {userProfile.qualification && (
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="text-blue-500" size={20} />
+                    <span className="text-gray-700">{userProfile.qualification}</span>
+                  </div>
+                )}
+                {userProfile.experience && (
+                  <div className="flex items-center gap-2">
+                    <FileText className="text-green-500" size={20} />
+                    <span className="text-gray-700">{userProfile.experience}</span>
+                  </div>
+                )}
+                {userProfile.location && (
+                  <div className="flex items-center gap-2">
+                    <User className="text-purple-500" size={20} />
+                    <span className="text-gray-700">{userProfile.location}</span>
+                  </div>
+                )}
               </div>
-              <div className="mb-4">
-                <h4 className="font-semibold text-gray-900 mb-2">Bio</h4>
-                <p className="text-gray-600 text-sm leading-relaxed">{userProfile.bio}</p>
-              </div>
-              <Button variant="outline">Edit Profile</Button>
+              {userProfile.bio && (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Bio</h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">{userProfile.bio}</p>
+                </div>
+              )}
+              <Button variant="outline" onClick={() => setProfileEditOpen(true)}>
+                Edit Profile
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -152,19 +327,29 @@ const ProfileSection = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4 text-sm">
-              Based on your qualification, you are eligible for:
-            </p>
-            <div className="space-y-3">
-              {eligibleExams.state.map((exam, index) => (
-                <div key={index} className="p-3 border-2 border-emerald-200 bg-emerald-50 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-emerald-800 text-sm">{exam}</span>
-                    <Badge className="bg-emerald-500 text-xs">Eligible</Badge>
-                  </div>
+            {userProfile.qualification ? (
+              <>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Based on your qualification ({userProfile.qualification}), you are eligible for:
+                </p>
+                <div className="space-y-3">
+                  {eligibleExams.state.map((exam, index) => (
+                    <div key={index} className="p-3 border-2 border-emerald-200 bg-emerald-50 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-emerald-800 text-sm">{exam}</span>
+                        <Badge className="bg-emerald-500 text-xs">Eligible</Badge>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <GraduationCap className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-gray-500 mb-4">Please update your qualification to see eligible exams</p>
+                <Button onClick={() => setProfileEditOpen(true)}>Update Profile</Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -177,19 +362,29 @@ const ProfileSection = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4 text-sm">
-              Based on your qualification, you are eligible for:
-            </p>
-            <div className="space-y-3">
-              {eligibleExams.central.map((exam, index) => (
-                <div key={index} className="p-3 border-2 border-indigo-200 bg-indigo-50 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-indigo-800 text-sm">{exam}</span>
-                    <Badge className="bg-indigo-500 text-xs">Eligible</Badge>
-                  </div>
+            {userProfile.qualification ? (
+              <>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Based on your qualification ({userProfile.qualification}), you are eligible for:
+                </p>
+                <div className="space-y-3">
+                  {eligibleExams.central.map((exam, index) => (
+                    <div key={index} className="p-3 border-2 border-indigo-200 bg-indigo-50 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-indigo-800 text-sm">{exam}</span>
+                        <Badge className="bg-indigo-500 text-xs">Eligible</Badge>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <GraduationCap className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-gray-500 mb-4">Please update your qualification to see eligible exams</p>
+                <Button onClick={() => setProfileEditOpen(true)}>Update Profile</Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

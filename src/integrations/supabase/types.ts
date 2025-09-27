@@ -88,13 +88,135 @@ export type Database = {
           },
         ]
       }
+      exam_alerts: {
+        Row: {
+          alert_types: string[]
+          created_at: string
+          email: string | null
+          exam_name: string
+          id: string
+          is_active: boolean | null
+          phone_number: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alert_types: string[]
+          created_at?: string
+          email?: string | null
+          exam_name: string
+          id?: string
+          is_active?: boolean | null
+          phone_number?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alert_types?: string[]
+          created_at?: string
+          email?: string | null
+          exam_name?: string
+          id?: string
+          is_active?: boolean | null
+          phone_number?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      exam_notifications: {
+        Row: {
+          created_at: string
+          exam_name: string
+          id: string
+          is_read: boolean | null
+          message: string
+          notification_type: string
+          source_url: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exam_name: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          notification_type: string
+          source_url?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exam_name?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          notification_type?: string
+          source_url?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      physical_tests: {
+        Row: {
+          chest_expanded_cm: number | null
+          chest_normal_cm: number | null
+          created_at: string
+          height_cm: number | null
+          id: string
+          long_jump_meters: number | null
+          notes: string | null
+          running_time_seconds: number | null
+          test_date: string
+          test_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chest_expanded_cm?: number | null
+          chest_normal_cm?: number | null
+          created_at?: string
+          height_cm?: number | null
+          id?: string
+          long_jump_meters?: number | null
+          notes?: string | null
+          running_time_seconds?: number | null
+          test_date?: string
+          test_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chest_expanded_cm?: number | null
+          chest_normal_cm?: number | null
+          created_at?: string
+          height_cm?: number | null
+          id?: string
+          long_jump_meters?: number | null
+          notes?: string | null
+          running_time_seconds?: number | null
+          test_date?: string
+          test_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
           email: string | null
+          experience: string | null
           full_name: string | null
           id: string
+          location: string | null
+          phone: string | null
+          qualification: string | null
           study_hours_goal: number | null
           target_exam: string | null
           updated_at: string
@@ -102,10 +224,15 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           email?: string | null
+          experience?: string | null
           full_name?: string | null
           id?: string
+          location?: string | null
+          phone?: string | null
+          qualification?: string | null
           study_hours_goal?: number | null
           target_exam?: string | null
           updated_at?: string
@@ -113,10 +240,15 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           email?: string | null
+          experience?: string | null
           full_name?: string | null
           id?: string
+          location?: string | null
+          phone?: string | null
+          qualification?: string | null
           study_hours_goal?: number | null
           target_exam?: string | null
           updated_at?: string

@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Circle, Download, Trophy, Award, Star } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const AchievementSection = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState("TNPSC Group 1");
   const [completedTopics, setCompletedTopics] = useState<{[key: string]: string[]}>({});
@@ -75,13 +80,47 @@ const AchievementSection = () => {
   const completionPercentage = Math.round((examCompletedTopics.length / currentSyllabus.length) * 100);
   const isCompleted = completionPercentage === 100;
 
-  const toggleTopic = (topic: string) => {
-    setCompletedTopics(prev => ({
-      ...prev,
-      [selectedExam]: prev[selectedExam]?.includes(topic) 
-        ? prev[selectedExam].filter(t => t !== topic)
-        : [...(prev[selectedExam] || []), topic]
-    }));
+  const toggleTopic = async (topic: string) => {
+    if (!user) return;
+    
+    const newCompletedTopics = {
+      ...completedTopics,
+      [selectedExam]: completedTopics[selectedExam]?.includes(topic) 
+        ? completedTopics[selectedExam].filter(t => t !== topic)
+        : [...(completedTopics[selectedExam] || []), topic]
+    };
+    
+    setCompletedTopics(newCompletedTopics);
+    
+    try {
+      // Calculate progress percentage
+      const totalTopics = examSyllabus[selectedExam]?.length || 1;
+      const completedCount = newCompletedTopics[selectedExam]?.length || 0;
+      const progressPercentage = Math.round((completedCount / totalTopics) * 100);
+      
+      // Save progress to database
+      const { error } = await supabase
+        .from('user_progress')
+        .upsert({
+          user_id: user.id,
+          subject_id: selectedExam, // Using exam name as subject_id for now
+          progress_percentage: progressPercentage,
+          completed_at: progressPercentage === 100 ? new Date().toISOString() : null
+        }, {
+          onConflict: 'user_id,subject_id'
+        });
+
+      if (error) {
+        console.error('Error saving progress:', error);
+        toast({
+          title: "Warning",
+          description: "Progress updated locally but couldn't save to database.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error saving progress:', error);
+    }
   };
 
   const downloadCertificate = () => {

@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { X, Bell, Mail, MessageSquare, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ExamAlertModalProps {
   isOpen: boolean;
@@ -15,6 +17,7 @@ interface ExamAlertModalProps {
 }
 
 const ExamAlertModal = ({ isOpen, onClose }: ExamAlertModalProps) => {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -50,7 +53,16 @@ const ExamAlertModal = ({ isOpen, onClose }: ExamAlertModalProps) => {
     );
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "Please log in to set up exam alerts.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!email || selectedExams.length === 0 || alertTypes.length === 0) {
       toast({
         title: "Please fill all required fields",
@@ -60,13 +72,38 @@ const ExamAlertModal = ({ isOpen, onClose }: ExamAlertModalProps) => {
       return;
     }
 
-    // Simulate saving alerts
-    toast({
-      title: "Exam Alerts Configured Successfully!",
-      description: `You will receive alerts for ${selectedExams.length} exams via email${phone ? ' and SMS' : ''}.`
-    });
-    
-    onClose();
+    try {
+      // Save alerts for each selected exam
+      const alerts = selectedExams.map(exam => ({
+        user_id: user.id,
+        exam_name: exam,
+        alert_types: alertTypes,
+        phone_number: phone || null,
+        email: email || null
+      }));
+
+      const { error } = await supabase
+        .from('exam_alerts')
+        .insert(alerts);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Exam Alerts Configured Successfully!",
+        description: `Alerts saved to database for ${selectedExams.length} exams.`
+      });
+      
+      onClose();
+    } catch (error) {
+      console.error('Error saving exam alerts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save exam alerts.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
