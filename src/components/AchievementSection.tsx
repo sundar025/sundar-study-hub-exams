@@ -15,6 +15,46 @@ const AchievementSection = () => {
   const [selectedExam, setSelectedExam] = useState("TNPSC Group 1");
   const [completedTopics, setCompletedTopics] = useState<{[key: string]: string[]}>({});
 
+  // Load user progress on component mount and when exam changes
+  useEffect(() => {
+    loadUserProgress();
+  }, [user, selectedExam]);
+
+  const loadUserProgress = async () => {
+    if (!user || !selectedExam) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('subject_id', selectedExam);
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading user progress:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        // Convert progress data back to completed topics format
+        const progress = data[0];
+        const totalTopics = examSyllabus[selectedExam]?.length || 0;
+        const completedCount = Math.round((progress.progress_percentage / 100) * totalTopics);
+        
+        // Mark first N topics as completed based on progress percentage
+        const topics = examSyllabus[selectedExam] || [];
+        const completed = topics.slice(0, completedCount);
+        
+        setCompletedTopics(prev => ({
+          ...prev,
+          [selectedExam]: completed
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading user progress:', error);
+    }
+  };
+
   const allExams = {
     state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
     central: ["UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]

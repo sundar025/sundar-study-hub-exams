@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,43 @@ const ExamSection = () => {
     notes: ""
   });
   const { toast } = useToast();
+
+  // Load saved physical test data on component mount
+  useEffect(() => {
+    loadPhysicalTestData();
+  }, [user]);
+
+  const loadPhysicalTestData = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('physical_tests')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('test_type', 'TNUSRB SI')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading physical test data:', error);
+        return;
+      }
+
+      if (data) {
+        setPhysicalTestData({
+          height: data.height_cm?.toString() || "",
+          chest: data.chest_normal_cm?.toString() || "",
+          runningTime: data.running_time_seconds?.toString() || "",
+          longJumpDistance: data.long_jump_meters?.toString() || "",
+          notes: data.notes || ""
+        });
+      }
+    } catch (error) {
+      console.error('Error loading physical test data:', error);
+    }
+  };
 
   const stateExams = [
     {
