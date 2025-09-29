@@ -14,12 +14,10 @@ const AchievementSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState("TNPSC Group 1");
   const [completedTopics, setCompletedTopics] = useState<{[key: string]: string[]}>({});
-  const [profileName, setProfileName] = useState("Student");
 
-  // Load user progress and profile on component mount and when exam changes
+  // Load user progress on component mount and when exam changes
   useEffect(() => {
     loadUserProgress();
-    loadUserProfile();
   }, [user, selectedExam]);
 
   const loadUserProgress = async () => {
@@ -80,33 +78,6 @@ const AchievementSection = () => {
       }
     } catch (error) {
       console.error('Error loading user progress:', error);
-    }
-  };
-
-  const loadUserProfile = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('full_name')
-        .eq('user_id', user.id)
-        .single();
-
-      if (error) {
-        console.error('Error loading user profile:', error);
-        return;
-      }
-
-      if (data?.full_name) {
-        setProfileName(data.full_name.toUpperCase());
-      } else {
-        // Fallback to email username if no full name
-        const emailUsername = user.email?.split('@')[0]?.toUpperCase() || "STUDENT";
-        setProfileName(emailUsername);
-      }
-    } catch (error) {
-      console.error('Error loading user profile:', error);
     }
   };
 
@@ -378,7 +349,7 @@ const AchievementSection = () => {
               <div className="text-center mb-8">
                 <p className="text-lg text-gray-700 mb-4">This is to certify that</p>
                 <div className="bg-amber-50 border-2 border-amber-300 rounded-lg p-4 mb-4">
-                  <h3 className="text-3xl font-bold text-amber-900">{profileName}</h3>
+                  <h3 className="text-3xl font-bold text-amber-900">RAJ KUMAR</h3>
                 </div>
                 <p className="text-lg text-gray-700 mb-4">has successfully completed the comprehensive syllabus for</p>
                 <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6">
