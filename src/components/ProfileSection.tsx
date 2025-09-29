@@ -19,6 +19,7 @@ const ProfileSection = () => {
   const [examAlertOpen, setExamAlertOpen] = useState(false);
   const [examCalendarOpen, setExamCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [recentNews, setRecentNews] = useState<any[]>([]);
   const [userProfile, setUserProfile] = useState({
     name: "",
     bio: "",
@@ -95,56 +96,27 @@ const ProfileSection = () => {
 
   const eligibleExams = getEligibleExams(userProfile.qualification);
 
-  const recentNews = [
-    {
-      title: "UPSC IFS Mains 2025 Schedule Released - November 11-23",
-      date: "2025-09-29",
-      source: "UPSC Official",
-      link: "https://upsc.gov.in/whats-new/Civil%20Services%20%28Preliminary%29%20Examination%2C%202025",
-      type: "Schedule",
-      category: "Central"
-    },
-    {
-      title: "TNPSC Group 4 Results 2025 Expected Soon - 3935 Posts",
-      date: "2025-09-28",
-      source: "TNPSC Official",
-      link: "https://tnpsc.gov.in/english/latest_results.aspx",
-      type: "Result",
-      category: "State"
-    },
-    {
-      title: "TNPSC CTS Registration 2025 Open - 1794 Posts Available",
-      date: "2025-09-25",
-      source: "TNPSC Official",
-      link: "https://www.tnpsc.gov.in/english/notification.aspx",
-      type: "Recruitment",
-      category: "State"
-    },
-    {
-      title: "UPSC Recruitment 2025 - 84 Lecturer Posts, Apply Now",
-      date: "2025-09-24",
-      source: "UPSC Official",
-      link: "https://upsc.gov.in/exams-related-info/exam-notification",
-      type: "Recruitment",
-      category: "Central"
-    },
-    {
-      title: "UPSC CAPF AC Examination 2025 - Applications Open",
-      date: "2025-03-05",
-      source: "UPSC Official",
-      link: "https://upsc.gov.in/exams-related-info/exam-notification",
-      type: "Important",
-      category: "Central"
-    },
-    {
-      title: "TNPSC Combined Technical Services Exam Results - Multiple Posts",
-      date: "2025-02-21",
-      source: "TNPSC Official",
-      link: "https://tnpsc.gov.in/english/answerkeys.aspx",
-      type: "Result",
-      category: "State"
+  // Load news from database
+  const loadExamNews = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('exam_news')
+        .select('*')
+        .order('date', { ascending: false })
+        .limit(6);
+
+      if (error) {
+        console.error('Error loading exam news:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setRecentNews(data);
+      }
+    } catch (error) {
+      console.error('Error loading exam news:', error);
     }
-  ];
+  };
 
   const getNewsBadgeColor = (type: string) => {
     switch (type) {
@@ -165,6 +137,7 @@ const ProfileSection = () => {
   useEffect(() => {
     if (user) {
       loadUserProfile();
+      loadExamNews();
     }
   }, [user]);
 

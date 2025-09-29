@@ -124,6 +124,42 @@ export type Database = {
         }
         Relationships: []
       }
+      exam_news: {
+        Row: {
+          category: string
+          created_at: string
+          date: string
+          id: string
+          link: string
+          source: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          date: string
+          id?: string
+          link: string
+          source: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          date?: string
+          id?: string
+          link?: string
+          source?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       exam_notifications: {
         Row: {
           created_at: string
