@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Clock, Target, TrendingUp, Brain, Award, Medal, Star, Trophy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const TestSection = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedTest, setSelectedTest] = useState<string | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -251,7 +256,41 @@ const TestSection = () => {
     }
   };
 
-  const finishTest = () => {
+  const finishTest = async () => {
+    if (!user || !selectedTest) return;
+    
+    const results = calculateResults();
+    
+    try {
+      // Save test attempt to database
+      const { error } = await supabase
+        .from('test_attempts')
+        .insert({
+          user_id: user.id,
+          test_id: selectedTest, // This would be the actual test UUID in a real scenario
+          score: results.correct,
+          total_questions: results.total,
+          time_taken_minutes: Math.round(results.avgTimePerQuestion * results.total / 60),
+          answers: answers
+        });
+
+      if (error) {
+        console.error('Error saving test attempt:', error);
+        toast({
+          title: "Warning",
+          description: "Test completed but couldn't save results.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Test results saved successfully!",
+        });
+      }
+    } catch (error) {
+      console.error('Error saving test attempt:', error);
+    }
+    
     setShowAnalysis(true);
   };
 

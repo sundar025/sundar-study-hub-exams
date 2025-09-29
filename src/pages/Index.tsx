@@ -2,16 +2,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, Trophy, FileText, User, LogOut } from "lucide-react";
+import { Home, Trophy, FileText, User, LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 import ExamSection from "@/components/ExamSection";
 import AchievementSection from "@/components/AchievementSection";
 import TestSection from "@/components/TestSection";
 import ProfileSection from "@/components/ProfileSection";
+import AdminPanel from "@/components/AdminPanel";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
   const { user, loading, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +53,8 @@ const Index = () => {
         return <TestSection />;
       case "profile":
         return <ProfileSection />;
+      case "admin":
+        return <AdminPanel />;
       default:
         return <ExamSection />;
     }
@@ -70,7 +75,14 @@ const Index = () => {
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
+              <div className="text-right">
+                <span className="text-sm text-gray-600">Welcome, {user.email}</span>
+                {isAdmin && (
+                  <div className="text-xs text-blue-600 font-semibold">
+                    🔧 Admin Mode Active
+                  </div>
+                )}
+              </div>
               <Button
                 variant="outline"
                 size="sm"
@@ -126,6 +138,16 @@ const Index = () => {
               <User size={20} />
               Profile
             </Button>
+            {isAdmin && (
+              <Button
+                variant={activeSection === "admin" ? "default" : "outline"}
+                onClick={() => setActiveSection("admin")}
+                className="flex items-center gap-2 px-8 py-3"
+              >
+                <Settings size={20} />
+                Admin
+              </Button>
+            )}
           </div>
         </div>
       </nav>

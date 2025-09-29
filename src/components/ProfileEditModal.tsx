@@ -19,6 +19,8 @@ interface ProfileEditModalProps {
     qualification: string;
     experience: string;
     location: string;
+    phone: string;
+    email: string;
   };
   onSave: (profile: any) => void;
 }
@@ -92,12 +94,35 @@ const ProfileEditModal = ({ isOpen, onClose, currentProfile, onSave }: ProfileEd
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="Enter your email"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
               <Input
                 id="location"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 placeholder="City, State"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="Enter your phone number"
               />
             </div>
           </div>
@@ -109,6 +134,8 @@ const ProfileEditModal = ({ isOpen, onClose, currentProfile, onSave }: ProfileEd
                 <SelectValue placeholder="Select your qualification" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="10th">10th</SelectItem>
+                <SelectItem value="12th">12th</SelectItem>
                 <SelectItem value="B.E Computer Science">B.E Computer Science</SelectItem>
                 <SelectItem value="B.Tech">B.Tech</SelectItem>
                 <SelectItem value="B.Sc">B.Sc</SelectItem>
