@@ -97,51 +97,51 @@ const ProfileSection = () => {
 
   const recentNews = [
     {
-      title: "UPSC Civil Services Mains 2024 Results Declared",
-      date: "2024-06-20",
+      title: "UPSC IFS Mains 2025 Schedule Released - November 11-23",
+      date: "2025-09-29",
       source: "UPSC Official",
-      link: "#",
-      type: "Result",
-      category: "Central"
-    },
-    {
-      title: "TNPSC Group 1 Notification 2024 Released - 1000+ Posts",
-      date: "2024-06-18",
-      source: "TNPSC Official",
-      link: "#",
-      type: "Important",
-      category: "State"
-    },
-    {
-      title: "SSC CGL 2024 Tier 1 Exam Schedule Announced",
-      date: "2024-06-15",
-      source: "SSC Official",
-      link: "#",
+      link: "https://upsc.gov.in/whats-new/Civil%20Services%20%28Preliminary%29%20Examination%2C%202025",
       type: "Schedule",
       category: "Central"
     },
     {
-      title: "TNUSRB SI Recruitment 2024 - Physical Standards Updated",
-      date: "2024-06-12",
-      source: "TNUSRB Official",
-      link: "#",
-      type: "Updates",
+      title: "TNPSC Group 4 Results 2025 Expected Soon - 3935 Posts",
+      date: "2025-09-28",
+      source: "TNPSC Official",
+      link: "https://tnpsc.gov.in/english/latest_results.aspx",
+      type: "Result",
       category: "State"
     },
     {
-      title: "NDA 2024 (II) Online Application Started",
-      date: "2024-06-10",
+      title: "TNPSC CTS Registration 2025 Open - 1794 Posts Available",
+      date: "2025-09-25",
+      source: "TNPSC Official",
+      link: "https://www.tnpsc.gov.in/english/notification.aspx",
+      type: "Recruitment",
+      category: "State"
+    },
+    {
+      title: "UPSC Recruitment 2025 - 84 Lecturer Posts, Apply Now",
+      date: "2025-09-24",
       source: "UPSC Official",
-      link: "#",
+      link: "https://upsc.gov.in/exams-related-info/exam-notification",
       type: "Recruitment",
       category: "Central"
     },
     {
-      title: "TNPSC Group 2 Mains Exam Pattern Changes 2024",
-      date: "2024-06-08",
+      title: "UPSC CAPF AC Examination 2025 - Applications Open",
+      date: "2025-03-05",
+      source: "UPSC Official",
+      link: "https://upsc.gov.in/exams-related-info/exam-notification",
+      type: "Important",
+      category: "Central"
+    },
+    {
+      title: "TNPSC Combined Technical Services Exam Results - Multiple Posts",
+      date: "2025-02-21",
       source: "TNPSC Official",
-      link: "#",
-      type: "Updates",
+      link: "https://tnpsc.gov.in/english/answerkeys.aspx",
+      type: "Result",
       category: "State"
     }
   ];
