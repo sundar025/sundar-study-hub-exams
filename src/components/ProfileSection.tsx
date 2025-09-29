@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import ProfileEditModal from "./ProfileEditModal";
 import ExamAlertModal from "./ExamAlertModal";
 import ExamCalendarModal from "./ExamCalendarModal";
+import StudyDashboard from "./StudyDashboard";
 
 const ProfileSection = () => {
   const { user } = useAuth();
@@ -467,6 +468,9 @@ const ProfileSection = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Study Progress Dashboard */}
+      <StudyDashboard />
 
       {/* Modals */}
       <ProfileEditModal

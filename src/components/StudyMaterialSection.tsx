@@ -9,12 +9,25 @@ const StudyMaterialSection = ({ examName, onBack }: { examName: string; onBack: 
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
+  const handleTopicSelect = (topicKey: string) => {
+    setSelectedTopic(topicKey);
+  };
+
+  const handleSubjectBack = () => {
+    setSelectedSubject(null);
+    setSelectedTopic(null);
+  };
+
+  const handleTopicBack = () => {
+    setSelectedTopic(null);
+  };
+
   if (selectedTopic && selectedSubject) {
     const topic = subjects[selectedSubject].topics[selectedTopic];
     return (
       <TopicView 
         topic={topic}
-        onBack={() => setSelectedTopic(null)}
+        onBack={handleTopicBack}
         subjectName={selectedSubject}
       />
     );
@@ -25,8 +38,8 @@ const StudyMaterialSection = ({ examName, onBack }: { examName: string; onBack: 
     return (
       <SubjectTopicsView 
         subject={subject}
-        onBack={() => setSelectedSubject(null)}
-        onTopicSelect={setSelectedTopic}
+        onBack={handleSubjectBack}
+        onTopicSelect={handleTopicSelect}
       />
     );
   }

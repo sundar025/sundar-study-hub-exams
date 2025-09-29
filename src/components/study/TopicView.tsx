@@ -1,8 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, Clock, CheckCircle } from "lucide-react";
 import { StudyContent } from "@/data/studyMaterialData";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useEffect, useState } from "react";
 
 interface TopicViewProps {
   topic: StudyContent;
@@ -11,6 +15,27 @@ interface TopicViewProps {
 }
 
 const TopicView = ({ topic, onBack, subjectName }: TopicViewProps) => {
+  const { getTopicProgress, markPointCompleted, isPointCompleted, recordStudySession } = useUserProgress();
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  
+  const topicProgress = getTopicProgress(subjectName, topic.title);
+  
+  useEffect(() => {
+    setStartTime(new Date());
+    
+    // Record study session when component unmounts
+    return () => {
+      const endTime = new Date();
+      const durationMinutes = Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+      if (durationMinutes > 0) {
+        recordStudySession(subjectName, topic.title, durationMinutes);
+      }
+    };
+  }, []);
+
+  const handlePointToggle = async (pointIndex: number) => {
+    await markPointCompleted(subjectName, topic.title, pointIndex, topic.keyPoints.length);
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -22,7 +47,19 @@ const TopicView = ({ topic, onBack, subjectName }: TopicViewProps) => {
           <ArrowLeft size={16} />
           Back to {subjectName}
         </Button>
-        <h2 className="text-2xl font-bold text-gray-900">{topic.title}</h2>
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-gray-900">{topic.title}</h2>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-600">
+            Progress: {topicProgress.completion_percentage}%
+          </div>
+          <Progress value={topicProgress.completion_percentage} className="w-32" />
+          {topicProgress.completion_percentage === 100 && (
+            <CheckCircle className="text-green-500" size={20} />
+          )}
+        </div>
       </div>
 
       <Card>
@@ -37,14 +74,28 @@ const TopicView = ({ topic, onBack, subjectName }: TopicViewProps) => {
 
           <div>
             <h3 className="text-lg font-semibold mb-3">Key Points</h3>
-            <ul className="space-y-2">
+            <div className="space-y-3">
               {topic.keyPoints.map((point, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-blue-500 font-bold">•</span>
-                  <span className="text-gray-700">{point}</span>
-                </li>
+                <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <Checkbox
+                    id={`point-${index}`}
+                    checked={isPointCompleted(subjectName, topic.title, index)}
+                    onCheckedChange={() => handlePointToggle(index)}
+                    className="mt-1"
+                  />
+                  <label 
+                    htmlFor={`point-${index}`}
+                    className={`text-gray-700 cursor-pointer flex-1 leading-relaxed ${
+                      isPointCompleted(subjectName, topic.title, index) 
+                        ? 'line-through text-gray-500' 
+                        : ''
+                    }`}
+                  >
+                    {point}
+                  </label>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
 
           {topic.importantDates && (
