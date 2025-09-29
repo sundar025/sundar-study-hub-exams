@@ -10,6 +10,7 @@ import { Eye, EyeOff, BookOpen } from 'lucide-react';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -17,6 +18,16 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isAdmin) {
+      setEmail('admin@studyhub.com');
+      setPassword('admin123');
+    } else {
+      setEmail('');
+      setPassword('');
+    }
+  }, [isAdmin]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,12 +80,14 @@ const Auth = () => {
 
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1">
-            <Tabs value={isLogin ? "login" : "signup"} onValueChange={(value) => {
+            <Tabs value={isAdmin ? "admin" : (isLogin ? "login" : "signup")} onValueChange={(value) => {
               setIsLogin(value === "login");
+              setIsAdmin(value === "admin");
             }}>
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="login">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="admin">Admin</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login" className="space-y-4">
@@ -88,6 +101,13 @@ const Auth = () => {
                 <CardTitle>Create account</CardTitle>
                 <CardDescription>
                   Join thousands of students preparing for competitive exams
+                </CardDescription>
+              </TabsContent>
+              
+              <TabsContent value="admin" className="space-y-4">
+                <CardTitle>Admin Access</CardTitle>
+                <CardDescription>
+                  Use admin@studyhub.com / admin123 for admin access
                 </CardDescription>
               </TabsContent>
             </Tabs>

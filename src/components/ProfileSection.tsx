@@ -31,14 +31,6 @@ const ProfileSection = () => {
   // Exam eligibility based on qualification
   const getEligibleExams = (qualification: string) => {
     const examsByQualification = {
-      "10th": {
-        state: ["TNPSC Group 4"],
-        central: ["SSC GD", "SSC MTS"]
-      },
-      "12th": {
-        state: ["TNPSC Group 4", "TNUSRB SI"],
-        central: ["SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]
-      },
       "B.E Computer Science": {
         state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
         central: ["UPSC Civil Services", "UPSC Assistant Commandant", "SSC GD", "SSC CGL", "SSC CHSL", "SSC MTS", "CAPF SI", "NDA", "CDS"]

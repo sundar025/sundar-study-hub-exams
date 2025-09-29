@@ -75,14 +75,7 @@ const Index = () => {
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-right">
-                <span className="text-sm text-gray-600">Welcome, {user.email}</span>
-                {isAdmin && (
-                  <div className="text-xs text-blue-600 font-semibold">
-                    🔧 Admin Mode Active
-                  </div>
-                )}
-              </div>
+              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
               <Button
                 variant="outline"
                 size="sm"
