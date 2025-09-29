@@ -14,14 +14,18 @@ const AchievementSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState("TNPSC Group 1");
   const [completedTopics, setCompletedTopics] = useState<{[key: string]: string[]}>({});
+  const [profileName, setProfileName] = useState("Student");
 
-  // Load user progress on component mount and when exam changes
+  // Load user progress and profile on component mount and when exam changes
   useEffect(() => {
     loadUserProgress();
+    loadUserProfile();
   }, [user, selectedExam]);
 
   const loadUserProgress = async () => {
     if (!user || !selectedExam) return;
+    
+    console.log('Loading progress for:', { user_id: user.id, subject_id: selectedExam });
     
     try {
       const { data, error } = await supabase
@@ -30,28 +34,79 @@ const AchievementSection = () => {
         .eq('user_id', user.id)
         .eq('subject_id', selectedExam);
 
+      console.log('Load result:', { data, error });
+
       if (error && error.code !== 'PGRST116') {
         console.error('Error loading user progress:', error);
         return;
       }
 
       if (data && data.length > 0) {
-        // Convert progress data back to completed topics format
         const progress = data[0];
-        const totalTopics = examSyllabus[selectedExam]?.length || 0;
-        const completedCount = Math.round((progress.progress_percentage / 100) * totalTopics);
+        console.log('Found progress data:', progress);
         
-        // Mark first N topics as completed based on progress percentage
-        const topics = examSyllabus[selectedExam] || [];
-        const completed = topics.slice(0, completedCount);
+        // Try to parse completed topics from topic_id field
+        let completedTopics = [];
+        try {
+          if (progress.topic_id) {
+            completedTopics = JSON.parse(progress.topic_id);
+          } else {
+            // Fallback: calculate from percentage
+            const totalTopics = examSyllabus[selectedExam]?.length || 0;
+            const completedCount = Math.round((progress.progress_percentage / 100) * totalTopics);
+            const topics = examSyllabus[selectedExam] || [];
+            completedTopics = topics.slice(0, completedCount);
+          }
+        } catch (parseError) {
+          console.error('Error parsing completed topics:', parseError);
+          // Fallback: calculate from percentage
+          const totalTopics = examSyllabus[selectedExam]?.length || 0;
+          const completedCount = Math.round((progress.progress_percentage / 100) * totalTopics);
+          const topics = examSyllabus[selectedExam] || [];
+          completedTopics = topics.slice(0, completedCount);
+        }
         
+        console.log('Setting completed topics:', completedTopics);
         setCompletedTopics(prev => ({
           ...prev,
-          [selectedExam]: completed
+          [selectedExam]: completedTopics
+        }));
+      } else {
+        console.log('No progress data found, starting fresh');
+        setCompletedTopics(prev => ({
+          ...prev,
+          [selectedExam]: []
         }));
       }
     } catch (error) {
       console.error('Error loading user progress:', error);
+    }
+  };
+
+  const loadUserProfile = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error loading user profile:', error);
+        return;
+      }
+
+      if (data?.full_name) {
+        setProfileName(data.full_name.toUpperCase());
+      } else {
+        // Fallback to email username if no full name
+        const emailUsername = user.email?.split('@')[0]?.toUpperCase() || "STUDENT";
+        setProfileName(emailUsername);
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
     }
   };
 
@@ -138,28 +193,50 @@ const AchievementSection = () => {
       const completedCount = newCompletedTopics[selectedExam]?.length || 0;
       const progressPercentage = Math.round((completedCount / totalTopics) * 100);
       
-      // Save progress to database
-      const { error } = await supabase
+      console.log('Saving progress:', {
+        user_id: user.id,
+        subject_id: selectedExam,
+        progress_percentage: progressPercentage,
+        completed_topics: newCompletedTopics[selectedExam]
+      });
+      
+      // Save progress to database - store completed topics as JSON
+      const { data, error } = await supabase
         .from('user_progress')
         .upsert({
           user_id: user.id,
-          subject_id: selectedExam, // Using exam name as subject_id for now
+          subject_id: selectedExam,
           progress_percentage: progressPercentage,
-          completed_at: progressPercentage === 100 ? new Date().toISOString() : null
+          completed_at: progressPercentage === 100 ? new Date().toISOString() : null,
+          // Store the actual completed topics list in a field we can use
+          topic_id: JSON.stringify(newCompletedTopics[selectedExam] || [])
         }, {
           onConflict: 'user_id,subject_id'
         });
 
+      console.log('Save result:', { data, error });
+
       if (error) {
         console.error('Error saving progress:', error);
         toast({
-          title: "Warning",
-          description: "Progress updated locally but couldn't save to database.",
+          title: "Error",
+          description: `Failed to save progress: ${error.message}`,
           variant: "destructive",
+        });
+      } else {
+        console.log('Progress saved successfully');
+        toast({
+          title: "Progress Saved",
+          description: "Your study progress has been saved successfully.",
         });
       }
     } catch (error) {
       console.error('Error saving progress:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while saving progress.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -301,7 +378,7 @@ const AchievementSection = () => {
               <div className="text-center mb-8">
                 <p className="text-lg text-gray-700 mb-4">This is to certify that</p>
                 <div className="bg-amber-50 border-2 border-amber-300 rounded-lg p-4 mb-4">
-                  <h3 className="text-3xl font-bold text-amber-900">RAJ KUMAR</h3>
+                  <h3 className="text-3xl font-bold text-amber-900">{profileName}</h3>
                 </div>
                 <p className="text-lg text-gray-700 mb-4">has successfully completed the comprehensive syllabus for</p>
                 <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6">
