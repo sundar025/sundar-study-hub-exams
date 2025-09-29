@@ -16,101 +16,45 @@ const ExamCalendarModal = ({ isOpen, onClose }: ExamCalendarModalProps) => {
   const [selectedMonth, setSelectedMonth] = useState("all");
 
   const examSchedule = [
-    // State Government Exams - TNPSC
+    // State Government Exams - TNPSC (Based on Official Notifications)
     {
       exam: "TNPSC Group 1 Prelims",
-      date: "2025-10-12",
+      date: "2025-06-15",
       time: "9:30 AM - 12:30 PM",
       location: "All Districts of Tamil Nadu",
       category: "state",
       status: "upcoming",
-      applicationDeadline: "2025-09-15"
+      applicationDeadline: "2025-04-30"
     },
     {
       exam: "TNPSC Group 1 Mains",
-      date: "2025-12-20",
+      date: "2025-12-01",
       time: "9:30 AM - 12:30 PM",
       location: "Chennai, Coimbatore, Madurai",
       category: "state",
       status: "upcoming",
-      applicationDeadline: "2025-11-10"
+      applicationDeadline: "2025-11-15"
     },
     {
       exam: "TNPSC Group 2 Prelims",
-      date: "2025-11-08",
+      date: "2025-09-28",
       time: "10:00 AM - 12:30 PM",
       location: "All Districts of Tamil Nadu",
       category: "state",
       status: "upcoming",
-      applicationDeadline: "2025-10-15"
+      applicationDeadline: "2025-09-10"
     },
     {
-      exam: "TNPSC Group 2 Mains",
-      date: "2026-01-25",
-      time: "9:30 AM - 12:30 PM",
-      location: "Chennai, Coimbatore, Madurai",
-      category: "state",
-      status: "upcoming",
-      applicationDeadline: "2025-12-20"
-    },
-    {
-      exam: "TNPSC Group 4",
-      date: "2025-10-26",
+      exam: "TNPSC Group 4 Services",
+      date: "2025-07-12",
       time: "10:00 AM - 12:30 PM",
       location: "All Districts of Tamil Nadu",
       category: "state",
       status: "upcoming",
-      applicationDeadline: "2025-10-02"
-    },
-    {
-      exam: "TNPSC VAO Exam",
-      date: "2025-11-16",
-      time: "10:00 AM - 12:00 PM",
-      location: "All Districts of Tamil Nadu",
-      category: "state",
-      status: "upcoming",
-      applicationDeadline: "2025-10-30"
-    },
-    {
-      exam: "TNPSC Combined Technical Services",
-      date: "2025-11-16",
-      time: "9:00 AM - 12:00 PM & 2:00 PM - 5:00 PM",
-      location: "Chennai, Coimbatore, Madurai",
-      category: "state",
-      status: "upcoming",
-      applicationDeadline: "2025-10-02"
+      applicationDeadline: "2025-05-24"
     },
     
-    // State Government Exams - TNUSRB
-    {
-      exam: "TNUSRB SI Written Exam",
-      date: "2025-12-14",
-      time: "10:00 AM - 12:00 PM",
-      location: "All Districts of Tamil Nadu",
-      category: "state",
-      status: "upcoming",
-      applicationDeadline: "2025-11-20"
-    },
-    {
-      exam: "TNUSRB SI Physical Test",
-      date: "2026-01-15",
-      time: "7:00 AM - 5:00 PM",
-      location: "District Headquarters",
-      category: "state",
-      status: "upcoming",
-      applicationDeadline: "2025-12-30"
-    },
-    {
-      exam: "TNUSRB Constable Written",
-      date: "2026-02-08",
-      time: "10:00 AM - 12:00 PM",
-      location: "All Districts of Tamil Nadu",
-      category: "state",
-      status: "upcoming",
-      applicationDeadline: "2026-01-15"
-    },
-    
-    // Central Government Exams - UPSC
+    // Central Government Exams - UPSC (Based on Official Calendar)
     {
       exam: "UPSC Civil Services Prelims",
       date: "2025-05-25",
@@ -122,30 +66,30 @@ const ExamCalendarModal = ({ isOpen, onClose }: ExamCalendarModalProps) => {
     },
     {
       exam: "UPSC Civil Services Mains",
-      date: "2025-09-12",
-      time: "9:00 AM - 12:00 PM & 2:00 PM - 5:00 PM",
-      location: "All India",
-      category: "central",
-      status: "upcoming",
-      applicationDeadline: "2025-08-01"
-    },
-    {
-      exam: "UPSC IFS Prelims",
-      date: "2025-06-15",
-      time: "9:30 AM - 11:30 AM & 2:00 PM - 4:00 PM",
-      location: "All India",
-      category: "central",
-      status: "upcoming",
-      applicationDeadline: "2025-03-18"
-    },
-    {
-      exam: "UPSC IFS Mains",
-      date: "2025-11-11",
+      date: "2025-08-22",
       time: "9:00 AM - 12:00 PM & 2:30 PM - 5:30 PM",
       location: "All India",
       category: "central",
       status: "upcoming",
-      applicationDeadline: "2025-09-30"
+      applicationDeadline: "2025-07-30"
+    },
+    {
+      exam: "UPSC CAPF AC Examination",
+      date: "2025-08-03",
+      time: "10:00 AM - 12:00 PM & 2:00 PM - 4:00 PM",
+      location: "All India",
+      category: "central",
+      status: "upcoming",
+      applicationDeadline: "2025-03-25"
+    },
+    {
+      exam: "UPSC Combined Medical Services",
+      date: "2025-07-13",
+      time: "9:00 AM - 11:30 AM & 2:30 PM - 4:30 PM",
+      location: "All India",
+      category: "central",
+      status: "upcoming",
+      applicationDeadline: "2025-03-11"
     },
     {
       exam: "UPSC NDA & NA (I)",
@@ -183,61 +127,52 @@ const ExamCalendarModal = ({ isOpen, onClose }: ExamCalendarModalProps) => {
       status: "upcoming",
       applicationDeadline: "2025-06-03"
     },
-    {
-      exam: "UPSC CAPF AC",
-      date: "2025-08-03",
-      time: "10:00 AM - 12:00 PM & 2:00 PM - 4:00 PM",
-      location: "All India",
-      category: "central",
-      status: "upcoming",
-      applicationDeadline: "2025-03-25"
-    },
     
-    // Central Government Exams - SSC
+    // Central Government Exams - SSC (Based on Official Calendar 2025-26)
     {
       exam: "SSC CGL Tier 1",
-      date: "2025-06-09",
+      date: "2025-09-12",
       time: "Multiple Shifts",
       location: "All India",
       category: "central",
       status: "upcoming",
-      applicationDeadline: "2025-04-26"
+      applicationDeadline: "2025-08-26"
     },
     {
       exam: "SSC CGL Tier 2",
-      date: "2025-09-18",
+      date: "2025-12-18",
+      time: "Multiple Shifts",
+      location: "All India",
+      category: "central",
+      status: "upcoming",
+      applicationDeadline: "2025-11-30"
+    },
+    {
+      exam: "SSC CHSL Tier 1",
+      date: "2025-10-01",
+      time: "Multiple Shifts",
+      location: "All India",
+      category: "central",
+      status: "upcoming",
+      applicationDeadline: "2025-09-15"
+    },
+    {
+      exam: "SSC CHSL Tier 2",
+      date: "2026-01-15",
+      time: "10:00 AM - 11:00 AM",
+      location: "All India",
+      category: "central",
+      status: "upcoming",
+      applicationDeadline: "2025-12-30"
+    },
+    {
+      exam: "SSC MTS & Havaldar",
+      date: "2025-09-30",
       time: "Multiple Shifts",
       location: "All India",
       category: "central",
       status: "upcoming",
       applicationDeadline: "2025-08-30"
-    },
-    {
-      exam: "SSC CHSL Tier 1",
-      date: "2025-05-05",
-      time: "Multiple Shifts",
-      location: "All India",
-      category: "central",
-      status: "upcoming",
-      applicationDeadline: "2025-03-07"
-    },
-    {
-      exam: "SSC CHSL Tier 2",
-      date: "2025-08-28",
-      time: "10:00 AM - 11:00 AM",
-      location: "All India",
-      category: "central",
-      status: "upcoming",
-      applicationDeadline: "2025-08-10"
-    },
-    {
-      exam: "SSC MTS & Havaldar",
-      date: "2025-09-01",
-      time: "Multiple Shifts",
-      location: "All India",
-      category: "central",
-      status: "upcoming",
-      applicationDeadline: "2025-06-30"
     },
     {
       exam: "SSC GD Constable",
@@ -265,6 +200,26 @@ const ExamCalendarModal = ({ isOpen, onClose }: ExamCalendarModalProps) => {
       category: "central",
       status: "upcoming",
       applicationDeadline: "2025-04-22"
+    },
+    
+    // Additional State Exams
+    {
+      exam: "TNUSRB SI Written Exam",
+      date: "2025-11-30",
+      time: "10:00 AM - 12:00 PM",
+      location: "All Districts of Tamil Nadu",
+      category: "state",
+      status: "upcoming",
+      applicationDeadline: "2025-10-31"
+    },
+    {
+      exam: "TNPSC VAO Exam",
+      date: "2025-08-16",
+      time: "10:00 AM - 12:00 PM",
+      location: "All Districts of Tamil Nadu",
+      category: "state",
+      status: "upcoming",
+      applicationDeadline: "2025-07-30"
     }
   ];
 
