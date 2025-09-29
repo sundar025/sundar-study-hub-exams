@@ -134,6 +134,8 @@ const ProfileEditModal = ({ isOpen, onClose, currentProfile, onSave }: ProfileEd
                 <SelectValue placeholder="Select your qualification" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="10th">10th</SelectItem>
+                <SelectItem value="12th">12th</SelectItem>
                 <SelectItem value="B.E Computer Science">B.E Computer Science</SelectItem>
                 <SelectItem value="B.Tech">B.Tech</SelectItem>
                 <SelectItem value="B.Sc">B.Sc</SelectItem>
