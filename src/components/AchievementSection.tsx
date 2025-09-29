@@ -1,59 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Circle, Download, Trophy, Award, Star } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 
 const AchievementSection = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState("TNPSC Group 1");
   const [completedTopics, setCompletedTopics] = useState<{[key: string]: string[]}>({});
-
-  // Load user progress on component mount and when exam changes
-  useEffect(() => {
-    loadUserProgress();
-  }, [user, selectedExam]);
-
-  const loadUserProgress = async () => {
-    if (!user || !selectedExam) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('user_progress')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('subject_id', selectedExam);
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error loading user progress:', error);
-        return;
-      }
-
-      if (data && data.length > 0) {
-        // Convert progress data back to completed topics format
-        const progress = data[0];
-        const totalTopics = examSyllabus[selectedExam]?.length || 0;
-        const completedCount = Math.round((progress.progress_percentage / 100) * totalTopics);
-        
-        // Mark first N topics as completed based on progress percentage
-        const topics = examSyllabus[selectedExam] || [];
-        const completed = topics.slice(0, completedCount);
-        
-        setCompletedTopics(prev => ({
-          ...prev,
-          [selectedExam]: completed
-        }));
-      }
-    } catch (error) {
-      console.error('Error loading user progress:', error);
-    }
-  };
 
   const allExams = {
     state: ["TNPSC Group 1", "TNPSC Group 2", "TNPSC Group 4", "TNUSRB SI"],
@@ -120,47 +75,13 @@ const AchievementSection = () => {
   const completionPercentage = Math.round((examCompletedTopics.length / currentSyllabus.length) * 100);
   const isCompleted = completionPercentage === 100;
 
-  const toggleTopic = async (topic: string) => {
-    if (!user) return;
-    
-    const newCompletedTopics = {
-      ...completedTopics,
-      [selectedExam]: completedTopics[selectedExam]?.includes(topic) 
-        ? completedTopics[selectedExam].filter(t => t !== topic)
-        : [...(completedTopics[selectedExam] || []), topic]
-    };
-    
-    setCompletedTopics(newCompletedTopics);
-    
-    try {
-      // Calculate progress percentage
-      const totalTopics = examSyllabus[selectedExam]?.length || 1;
-      const completedCount = newCompletedTopics[selectedExam]?.length || 0;
-      const progressPercentage = Math.round((completedCount / totalTopics) * 100);
-      
-      // Save progress to database
-      const { error } = await supabase
-        .from('user_progress')
-        .upsert({
-          user_id: user.id,
-          subject_id: selectedExam, // Using exam name as subject_id for now
-          progress_percentage: progressPercentage,
-          completed_at: progressPercentage === 100 ? new Date().toISOString() : null
-        }, {
-          onConflict: 'user_id,subject_id'
-        });
-
-      if (error) {
-        console.error('Error saving progress:', error);
-        toast({
-          title: "Warning",
-          description: "Progress updated locally but couldn't save to database.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Error saving progress:', error);
-    }
+  const toggleTopic = (topic: string) => {
+    setCompletedTopics(prev => ({
+      ...prev,
+      [selectedExam]: prev[selectedExam]?.includes(topic) 
+        ? prev[selectedExam].filter(t => t !== topic)
+        : [...(prev[selectedExam] || []), topic]
+    }));
   };
 
   const downloadCertificate = () => {
