@@ -1,4 +1,3 @@
-
 interface StudyContent {
   title: string;
   description: string;
@@ -41,6 +40,72 @@ The civilization's cities were noted for their urban planning, baked brick house
           "2600 BCE - Mature Harappan Period",
           "1900 BCE - Late Harappan Period",
           "1300 BCE - Civilization decline"
+        ]
+      },
+      "Vedic Period": {
+        title: "Vedic Period (1500-600 BCE)",
+        description: "Foundation of Indian civilization and culture",
+        content: `The Vedic Period is characterized by the composition of the Vedas, the oldest scriptures of Hinduism. This period saw the emergence of Aryan culture in India and the development of Sanskrit literature, religious practices, and social structures.
+
+The period is divided into Early Vedic Period (1500-1000 BCE) and Later Vedic Period (1000-600 BCE). The Rig Veda, composed during the early period, provides insights into the social, economic, and political life of the Aryans.`,
+        keyPoints: [
+          "Composition of the four Vedas: Rig, Sama, Yajur, Atharva",
+          "Aryan migration and settlement in India",
+          "Development of Sanskrit language",
+          "Emergence of caste system (Varna system)",
+          "Pastoral and agricultural economy",
+          "River Sapta Sindhu (Seven Rivers) region",
+          "Foundation of Hindu philosophy and rituals"
+        ],
+        importantDates: [
+          "1500 BCE - Beginning of Vedic Period",
+          "1200 BCE - Composition of Rig Veda",
+          "1000 BCE - Later Vedic Period begins",
+          "600 BCE - End of Vedic Period"
+        ]
+      },
+      "Mauryan Empire": {
+        title: "Mauryan Empire (321-185 BCE)",
+        description: "First pan-Indian empire under Chandragupta Maurya",
+        content: `The Mauryan Empire was the first dynasty to rule over most of the Indian subcontinent. It was founded by Chandragupta Maurya with the help of his advisor Chanakya (Kautilya). The empire reached its zenith under Ashoka the Great.
+
+The Mauryans established an efficient administrative system and promoted trade and commerce. Emperor Ashoka's conversion to Buddhism and his efforts to spread Buddhist values marked a significant phase in Indian history.`,
+        keyPoints: [
+          "Founded by Chandragupta Maurya (321 BCE)",
+          "Capital: Pataliputra (modern-day Patna)",
+          "Chanakya's Arthashastra - treatise on statecraft",
+          "Ashoka's conversion to Buddhism after Kalinga War",
+          "Spread of Buddhism across Asia",
+          "Efficient administrative system with provinces",
+          "Decline due to weak successors after Ashoka"
+        ],
+        importantDates: [
+          "321 BCE - Chandragupta Maurya founds the empire",
+          "268-232 BCE - Ashoka's reign",
+          "261 BCE - Kalinga War",
+          "185 BCE - End of Mauryan Empire"
+        ]
+      },
+      "Gupta Empire": {
+        title: "Gupta Empire (320-550 CE)",
+        description: "Golden Age of ancient India",
+        content: `The Gupta Empire marked the Golden Age of ancient India, characterized by significant achievements in science, technology, engineering, art, dialectic, literature, logic, mathematics, astronomy, religion, and philosophy.
+
+Under rulers like Chandragupta II and Samudragupta, the empire experienced prosperity and cultural renaissance. This period saw the flourishing of Sanskrit literature, Hindu art and architecture, and scientific discoveries.`,
+        keyPoints: [
+          "Golden Age of ancient Indian civilization",
+          "Major rulers: Chandragupta I, Samudragupta, Chandragupta II",
+          "Flourishing of arts, literature, and sciences",
+          "Kalidasa - greatest Sanskrit poet and dramatist",
+          "Aryabhata's astronomical and mathematical works",
+          "Hindu temple architecture development",
+          "Decimal system and concept of zero"
+        ],
+        importantDates: [
+          "320 CE - Chandragupta I establishes Gupta Era",
+          "335-375 CE - Samudragupta's reign",
+          "375-415 CE - Chandragupta II's reign",
+          "550 CE - Decline of Gupta Empire"
         ]
       },
       "Mughals": {
@@ -87,6 +152,29 @@ The Marathas are credited to a large extent for ending the Mughal rule over most
           "1720 - Peshwa Bajirao I becomes ruler",
           "1761 - Third Battle of Panipat",
           "1818 - End of Maratha Empire"
+        ]
+      },
+      "British Colonial Period": {
+        title: "British Colonial Period (1757-1947)",
+        description: "British rule in India and its impact",
+        content: `The British colonial period in India began with the victory of the East India Company at the Battle of Plassey in 1757. Over the next century, the British gradually extended their control over the entire subcontinent.
+
+The period witnessed significant changes in Indian society, economy, and politics. The British introduced modern education, railways, telegraph, and administrative systems, but also exploited India's resources and caused economic drain.`,
+        keyPoints: [
+          "Battle of Plassey (1757) - Beginning of British rule",
+          "East India Company's gradual expansion",
+          "Revolt of 1857 - First War of Independence",
+          "Crown rule after 1858 (Government of India Act)",
+          "Economic exploitation and drain of wealth",
+          "Introduction of modern education and technology",
+          "Administrative and legal reforms"
+        ],
+        importantDates: [
+          "1757 - Battle of Plassey",
+          "1857 - Sepoy Mutiny/First War of Independence",
+          "1858 - Government of India Act, Crown rule begins",
+          "1885 - Formation of Indian National Congress",
+          "1947 - Indian Independence"
         ]
       }
     }
@@ -233,6 +321,27 @@ These principles are non-justiciable, meaning they cannot be enforced through co
           "Equal pay for equal work",
           "Free and compulsory education for children"
         ]
+      },
+      "Union Government": {
+        title: "Union Government",
+        description: "Structure and functions of central government",
+        content: `The Union Government of India consists of three organs: the Executive (President, Prime Minister, and Council of Ministers), the Legislature (Parliament - Lok Sabha and Rajya Sabha), and the Judiciary (Supreme Court and High Courts).
+
+The President is the constitutional head of state, while the Prime Minister is the head of government. The Parliament makes laws for the entire country.`,
+        keyPoints: [
+          "Three organs: Executive, Legislature, Judiciary",
+          "President - Constitutional head, elected indirectly",
+          "Prime Minister - Head of government, leader of majority party",
+          "Parliament: Lok Sabha (545 members) and Rajya Sabha (245 members)",
+          "Council of Ministers - Collective responsibility",
+          "Supreme Court - Final interpreter of Constitution",
+          "Separation of powers with checks and balances"
+        ],
+        examples: [
+          "Lok Sabha - Lower house, directly elected",
+          "Rajya Sabha - Upper house, indirectly elected",
+          "President's powers - Nominal head with discretionary powers"
+        ]
       }
     }
   },
@@ -304,6 +413,27 @@ The major river systems include the Indus, Ganga-Brahmaputra, and the peninsular
           "Brahmaputra system - Brahmaputra, Barak",
           "Peninsular rivers - Godavari, Krishna, Kaveri, Narmada"
         ]
+      },
+      "Natural Resources": {
+        title: "Natural Resources",
+        description: "Mineral resources and their distribution in India",
+        content: `India is rich in mineral resources including coal, iron ore, manganese, mica, bauxite, and petroleum. The distribution of these resources varies across different geological formations and regions.
+
+The Peninsular Plateau, particularly the Chota Nagpur Plateau, is rich in metallic minerals, while the sedimentary rocks of the northern plains contain coal and petroleum.`,
+        keyPoints: [
+          "Rich in coal, iron ore, manganese, mica, bauxite",
+          "Chota Nagpur Plateau - Iron and steel region",
+          "Coal deposits mainly in eastern states",
+          "Petroleum in western offshore and northeastern states",
+          "Atomic minerals: uranium, thorium",
+          "Non-metallic minerals: limestone, dolomite, gypsum",
+          "Renewable energy resources: solar, wind, hydro"
+        ],
+        examples: [
+          "Jharia coalfield - Largest coal deposit in India",
+          "Kudremukh - Iron ore mines in Karnataka",
+          "Bombay High - Major offshore oil field"
+        ]
       }
     }
   },
@@ -357,22 +487,43 @@ Major branches include organic chemistry, inorganic chemistry, physical chemistr
       "Biology": {
         title: "Biology",
         description: "Study of living organisms",
-        content: `Biology is the scientific study of living organisms and their interactions with the environment. It encompasses various levels from molecules to ecosystems.
+        content: `Biology is the science that studies living organisms and their interactions with each other and their environment. It encompasses various sub-disciplines from molecular biology to ecology.
 
-Major branches include botany (study of plants), zoology (study of animals), microbiology, genetics, ecology, and biotechnology.`,
+Major branches include botany (study of plants), zoology (study of animals), microbiology (study of microorganisms), genetics, and ecology.`,
         keyPoints: [
           "Study of living organisms and life processes",
-          "Cell - basic unit of life",
-          "Classification of organisms",
-          "Human body systems",
-          "Heredity and variation",
+          "Cell structure and function",
+          "Genetics and heredity",
           "Evolution and natural selection",
+          "Photosynthesis and respiration",
+          "Human anatomy and physiology",
           "Ecology and environmental science"
         ],
         examples: [
-          "Cell division - Mitosis and Meiosis",
-          "DNA structure - Double helix",
-          "Digestive system - Mouth to anus pathway"
+          "DNA structure - Double helix discovered by Watson and Crick",
+          "Mitosis - Cell division for growth and repair",
+          "Natural selection - Survival of the fittest"
+        ]
+      },
+      "Environmental Science": {
+        title: "Environmental Science",
+        description: "Study of environment and environmental problems",
+        content: `Environmental Science is an interdisciplinary field that combines physical, biological, and information sciences to study the environment and solve environmental problems. It encompasses ecology, atmospheric science, soil science, and geography.
+
+Key issues include climate change, pollution, biodiversity loss, sustainable development, and renewable energy.`,
+        keyPoints: [
+          "Ecosystem structure and function",
+          "Biodiversity and conservation",
+          "Pollution and its types: air, water, soil, noise",
+          "Climate change and global warming",
+          "Renewable and non-renewable resources",
+          "Sustainable development goals",
+          "Environmental laws and policies"
+        ],
+        examples: [
+          "Greenhouse effect - Trapping of heat by atmospheric gases",
+          "Food chain - Producer → Primary consumer → Secondary consumer",
+          "Ozone depletion - Destruction of ozone layer by CFCs"
         ]
       }
     }
@@ -380,69 +531,92 @@ Major branches include botany (study of plants), zoology (study of animals), mic
   "Economics": {
     name: "Economics",
     icon: "💰",
-    color: "bg-yellow-500",
+    color: "bg-emerald-500",
     topics: {
+      "Microeconomics": {
+        title: "Microeconomics",
+        description: "Study of individual economic units and market behavior",
+        content: `Microeconomics is the branch of economics that studies the behavior of individual economic units such as consumers, firms, and workers. It analyzes how these units make decisions and how they interact in markets.
+
+Key concepts include supply and demand, elasticity, consumer theory, producer theory, market structures, and market failures.`,
+        keyPoints: [
+          "Study of individual economic behavior",
+          "Supply and demand analysis",
+          "Price determination in different markets",
+          "Consumer choice and utility maximization",
+          "Producer behavior and profit maximization",
+          "Market structures: perfect competition, monopoly, oligopoly",
+          "Market failures and government intervention"
+        ],
+        examples: [
+          "Law of Demand - Inverse relationship between price and quantity demanded",
+          "Elasticity of Demand - Responsiveness of demand to price changes",
+          "Monopoly pricing - Setting price above marginal cost"
+        ]
+      },
+      "Macroeconomics": {
+        title: "Macroeconomics",
+        description: "Study of economy as a whole",
+        content: `Macroeconomics is the branch of economics that studies the economy as a whole. It focuses on aggregate economic variables such as national income, employment, inflation, and economic growth.
+
+Key areas include GDP measurement, inflation, unemployment, fiscal policy, monetary policy, and international trade.`,
+        keyPoints: [
+          "Study of aggregate economic variables",
+          "Gross Domestic Product (GDP) and its measurement",
+          "Inflation and price level changes",
+          "Unemployment and labor market dynamics",
+          "Fiscal policy - government spending and taxation",
+          "Monetary policy - money supply and interest rates",
+          "Balance of payments and exchange rates"
+        ],
+        examples: [
+          "GDP calculation - C + I + G + (X - M)",
+          "Phillips Curve - Trade-off between inflation and unemployment",
+          "Multiplier effect - Change in income due to change in spending"
+        ]
+      },
       "Indian Economy": {
         title: "Indian Economy",
-        description: "Structure and features of Indian economy",
-        content: `The Indian economy is the world's fifth-largest economy by nominal GDP and third-largest by purchasing power parity. It is a mixed economy with both private and public sectors.
+        description: "Structure and development of Indian economy",
+        content: `The Indian economy is characterized by its diversity, with agriculture, industry, and services contributing to GDP. Since independence, India has undergone significant economic transformation, from a planned economy to a mixed economy with market reforms.
 
-The economy has transformed from a primarily agricultural economy to a diversified economy with significant contributions from services, manufacturing, and agriculture.`,
+Key features include demographic dividend, IT services sector, manufacturing growth, and challenges like poverty, unemployment, and income inequality.`,
         keyPoints: [
-          "Fifth-largest economy by nominal GDP",
           "Mixed economy with public and private sectors",
-          "Three sectors: Primary, Secondary, Tertiary",
-          "Agriculture employs about 50% of workforce",
-          "Services sector contributes most to GDP",
-          "Economic reforms started in 1991",
-          "Major challenges: poverty, unemployment, inequality"
+          "Service sector dominance (IT, finance, tourism)",
+          "Agricultural sector employs large population",
+          "Industrial growth and Make in India initiative",
+          "Demographic dividend - young population",
+          "Economic reforms since 1991",
+          "Challenges: poverty, unemployment, inequality"
         ],
-        examples: [
-          "Primary sector - Agriculture, mining, forestry",
-          "Secondary sector - Manufacturing, construction",
-          "Tertiary sector - Services, IT, banking"
+        importantDates: [
+          "1991 - Economic liberalization begins",
+          "2000 - IT boom begins",
+          "2014 - Make in India launched",
+          "2016 - Demonetization",
+          "2017 - GST implementation"
         ]
       },
-      "Banking System": {
-        title: "Banking System in India",
-        description: "Structure and functions of banking in India",
-        content: `The banking system in India is regulated by the Reserve Bank of India (RBI). It consists of commercial banks, cooperative banks, and regional rural banks.
+      "Banking and Finance": {
+        title: "Banking and Finance",
+        description: "Financial institutions and monetary system",
+        content: `Banking and finance form the backbone of any economy. The banking system mobilizes savings and channels them into productive investments. In India, the Reserve Bank of India (RBI) is the central bank that regulates monetary policy.
 
-The system includes public sector banks, private sector banks, and foreign banks operating in India.`,
+The financial system includes commercial banks, cooperative banks, regional rural banks, non-banking financial companies, and capital markets.`,
         keyPoints: [
-          "RBI - Central bank and regulator",
-          "Commercial banks - Public, private, foreign",
-          "Cooperative banks - Urban and rural",
-          "Regional Rural Banks (RRBs)",
-          "Functions: Deposits, loans, money transfer",
-          "Financial inclusion initiatives",
-          "Digital banking and payment systems"
+          "Reserve Bank of India (RBI) - Central bank",
+          "Commercial banks - Public and private sector",
+          "Cooperative banks and regional rural banks",
+          "Non-Banking Financial Companies (NBFCs)",
+          "Capital markets - stock exchanges",
+          "Monetary policy tools - repo rate, CRR, SLR",
+          "Financial inclusion and digital banking"
         ],
         examples: [
-          "Public sector banks - SBI, PNB, Bank of Baroda",
-          "Private sector banks - HDFC, ICICI, Axis Bank",
-          "Payment systems - UPI, NEFT, RTGS"
-        ]
-      },
-      "Budget and Fiscal Policy": {
-        title: "Budget and Fiscal Policy",
-        description: "Government budget and fiscal management",
-        content: `The Union Budget is the annual financial statement of the Government of India. It outlines the government's revenue and expenditure for the fiscal year.
-
-Fiscal policy involves government spending and taxation policies to influence economic activity.`,
-        keyPoints: [
-          "Annual financial statement of government",
-          "Revenue budget and capital budget",
-          "Direct and indirect taxes",
-          "Fiscal deficit and revenue deficit",
-          "Public debt and debt management",
-          "Budget process and parliamentary approval",
-          "Impact on economic growth and development"
-        ],
-        examples: [
-          "Direct taxes - Income tax, corporate tax",
-          "Indirect taxes - GST, customs duty",
-          "Expenditure - Revenue and capital expenditure"
+          "Repo Rate - Rate at which RBI lends to commercial banks",
+          "SLR - Statutory Liquidity Ratio for government securities",
+          "MUDRA scheme - Micro credit for small businesses"
         ]
       }
     }
@@ -454,31 +628,31 @@ Fiscal policy involves government spending and taxation policies to influence ec
     topics: {
       "Arithmetic": {
         title: "Arithmetic",
-        description: "Basic mathematical operations and concepts",
-        content: `Arithmetic is the branch of mathematics dealing with numbers and basic operations. It forms the foundation for all other mathematical concepts.
+        description: "Basic mathematical operations and number systems",
+        content: `Arithmetic forms the foundation of mathematics, dealing with basic operations like addition, subtraction, multiplication, and division. It includes the study of different number systems and their properties.
 
-Key topics include number system, fractions, decimals, percentages, ratio and proportion, and simple and compound interest.`,
+Key concepts include integers, fractions, decimals, percentages, ratio and proportion, and profit and loss calculations.`,
         keyPoints: [
-          "Number system - Natural, whole, integers, rational, irrational",
-          "Basic operations - Addition, subtraction, multiplication, division",
+          "Basic operations: addition, subtraction, multiplication, division",
+          "Number systems: natural, whole, integers, rational, irrational",
           "Fractions and decimals",
           "Percentages and their applications",
           "Ratio and proportion",
-          "Simple and compound interest",
-          "Profit and loss calculations"
+          "Profit, loss, and discount calculations",
+          "Simple and compound interest"
         ],
         examples: [
-          "Percentage formula: (Part/Whole) × 100",
-          "Simple Interest: SI = (P × R × T) / 100",
-          "Compound Interest: CI = P(1 + R/100)ⁿ - P"
+          "Percentage calculation - (Part/Whole) × 100",
+          "Simple Interest - (P × R × T)/100",
+          "Compound Interest - P(1 + R/100)^T - P"
         ]
       },
       "Algebra": {
         title: "Algebra",
         description: "Study of mathematical symbols and rules",
-        content: `Algebra is the branch of mathematics that uses letters and symbols to represent numbers and quantities in formulas and equations.
+        content: `Algebra is the branch of mathematics that uses symbols (usually letters) to represent numbers and quantities in formulas and equations. It provides methods for solving equations and understanding relationships between variables.
 
-It includes linear equations, quadratic equations, polynomials, and algebraic expressions.`,
+Key areas include linear equations, quadratic equations, polynomials, and algebraic expressions.`,
         keyPoints: [
           "Variables and constants",
           "Algebraic expressions and equations",
@@ -486,33 +660,239 @@ It includes linear equations, quadratic equations, polynomials, and algebraic ex
           "Quadratic equations and their solutions",
           "Polynomials and their operations",
           "Factorization techniques",
-          "Simultaneous equations"
+          "Inequalities and their solutions"
         ],
         examples: [
-          "Linear equation: ax + b = 0",
-          "Quadratic equation: ax² + bx + c = 0",
-          "Quadratic formula: x = [-b ± √(b²-4ac)] / 2a"
+          "Linear equation - ax + b = 0",
+          "Quadratic formula - x = (-b ± √(b² - 4ac))/2a",
+          "Factorization - x² - 4 = (x + 2)(x - 2)"
         ]
       },
       "Geometry": {
         title: "Geometry",
         description: "Study of shapes, sizes, and properties of space",
-        content: `Geometry is the branch of mathematics concerned with shapes, sizes, relative positions of figures, and properties of space.
+        content: `Geometry is the branch of mathematics concerned with properties and relations of points, lines, surfaces, and solids. It includes both plane geometry (2D) and solid geometry (3D).
 
-It includes plane geometry (2D shapes) and solid geometry (3D shapes), along with coordinate geometry.`,
+Key concepts include angles, triangles, circles, polygons, area, perimeter, volume, and surface area.`,
         keyPoints: [
-          "Points, lines, and planes",
+          "Points, lines, rays, and line segments",
           "Angles and their types",
           "Triangles and their properties",
           "Quadrilaterals and polygons",
           "Circles and their properties",
-          "Area and perimeter of 2D shapes",
-          "Volume and surface area of 3D shapes"
+          "Area and perimeter of plane figures",
+          "Volume and surface area of solids"
         ],
         examples: [
-          "Area of triangle: A = (1/2) × base × height",
-          "Area of circle: A = πr²",
-          "Volume of sphere: V = (4/3)πr³"
+          "Pythagorean theorem - a² + b² = c²",
+          "Area of circle - πr²",
+          "Volume of cylinder - πr²h"
+        ]
+      },
+      "Statistics": {
+        title: "Statistics",
+        description: "Collection, analysis, and interpretation of data",
+        content: `Statistics is the science of collecting, analyzing, interpreting, and presenting data. It provides methods for making sense of numerical information and drawing conclusions from data.
+
+Key concepts include measures of central tendency, dispersion, probability, and data representation through graphs and charts.`,
+        keyPoints: [
+          "Data collection and organization",
+          "Measures of central tendency: mean, median, mode",
+          "Measures of dispersion: range, variance, standard deviation",
+          "Probability and its applications",
+          "Data representation: bar graphs, pie charts, histograms",
+          "Correlation and regression",
+          "Sampling and hypothesis testing"
+        ],
+        examples: [
+          "Mean calculation - Sum of all values / Number of values",
+          "Probability - Number of favorable outcomes / Total outcomes",
+          "Standard deviation - √(Σ(x - μ)²/N)"
+        ]
+      }
+    }
+  },
+  "Current Affairs": {
+    name: "Current Affairs",
+    icon: "📰",
+    color: "bg-red-500",
+    topics: {
+      "National Affairs": {
+        title: "National Affairs",
+        description: "Important national developments and policies",
+        content: `National affairs encompass the political, economic, social, and cultural developments within India. This includes government policies, schemes, legislative changes, and significant events that impact the nation.
+
+Staying updated with national affairs is crucial for competitive exams and understanding the country's progress and challenges.`,
+        keyPoints: [
+          "Government policies and schemes",
+          "Legislative developments and new laws",
+          "Economic reforms and budget highlights",
+          "Social welfare programs",
+          "Infrastructure development projects",
+          "Digital India initiatives",
+          "Health and education policies"
+        ],
+        examples: [
+          "Pradhan Mantri Jan Dhan Yojana - Financial inclusion",
+          "Ayushman Bharat - Health insurance scheme",
+          "Digital India - Technology-driven governance"
+        ]
+      },
+      "International Affairs": {
+        title: "International Affairs",
+        description: "Global developments and India's foreign relations",
+        content: `International affairs cover global political, economic, and social developments that have implications for India and the world. This includes international organizations, treaties, conflicts, and diplomatic relations.
+
+Understanding international affairs helps in grasping India's position in the global context and foreign policy decisions.`,
+        keyPoints: [
+          "India's foreign policy and diplomatic relations",
+          "International organizations: UN, WHO, IMF, World Bank",
+          "Trade agreements and economic partnerships",
+          "Global conflicts and peace initiatives",
+          "Climate change and environmental treaties",
+          "Technology and space cooperation",
+          "Cultural and educational exchanges"
+        ],
+        examples: [
+          "BRICS cooperation - Brazil, Russia, India, China, South Africa",
+          "Paris Climate Agreement - Global climate action",
+          "Indo-Pacific strategy - Regional security cooperation"
+        ]
+      },
+      "Science and Technology": {
+        title: "Science and Technology",
+        description: "Recent developments in science and technology",
+        content: `Science and technology developments include breakthroughs in research, space exploration, medical advances, digital technologies, and their applications in improving human life.
+
+Keeping track of scientific and technological progress is essential for understanding modern developments and their implications.`,
+        keyPoints: [
+          "Space missions and achievements",
+          "Medical breakthroughs and healthcare technology",
+          "Information technology and digitalization",
+          "Renewable energy technologies",
+          "Artificial intelligence and machine learning",
+          "Biotechnology and genetic engineering",
+          "Defense technology and innovations"
+        ],
+        examples: [
+          "Chandrayaan missions - Lunar exploration by ISRO",
+          "COVID-19 vaccines - Global vaccination drive",
+          "5G technology - Next-generation mobile networks"
+        ]
+      },
+      "Awards and Recognition": {
+        title: "Awards and Recognition",
+        description: "Important awards and honors in various fields",
+        content: `Awards and recognition highlight achievements in various fields including literature, science, sports, social service, and arts. These include national and international awards, honors, and recognitions.
+
+Knowledge of awards helps in understanding excellence in different fields and notable personalities.`,
+        keyPoints: [
+          "Nobel Prizes in various categories",
+          "Bharat Ratna - Highest civilian honor in India",
+          "Padma Awards - Padma Vibhushan, Padma Bhushan, Padma Shri",
+          "Rajiv Gandhi Khel Ratna - Sports excellence",
+          "Ramon Magsaysay Award - Asian Nobel Prize",
+          "Booker Prize and Pulitzer Prize - Literature",
+          "Oscar and Grammy Awards - Entertainment"
+        ],
+        examples: [
+          "Nobel Peace Prize - Outstanding contribution to peace",
+          "Bharat Ratna recipients - National icons",
+          "Olympic medals - Sports achievements"
+        ]
+      }
+    }
+  },
+  "General Knowledge": {
+    name: "General Knowledge",
+    icon: "🧠",
+    color: "bg-teal-500",
+    topics: {
+      "World Geography": {
+        title: "World Geography",
+        description: "Physical and political geography of the world",
+        content: `World geography encompasses the study of Earth's physical features, climate patterns, countries, capitals, and important geographical landmarks. It includes both physical geography (mountains, rivers, climate) and human geography (population, cities, culture).
+
+Understanding world geography is essential for comprehending global affairs, international relations, and environmental issues.`,
+        keyPoints: [
+          "Continents and oceans of the world",
+          "Major mountain ranges: Himalayas, Andes, Rocky Mountains",
+          "Important rivers: Amazon, Nile, Mississippi, Yangtze",
+          "Countries, capitals, and currencies",
+          "Climate zones and weather patterns",
+          "Natural resources and their distribution",
+          "Time zones and international date line"
+        ],
+        examples: [
+          "Seven continents - Asia, Africa, North America, South America, Antarctica, Europe, Australia",
+          "Longest river - Nile (6,650 km)",
+          "Highest peak - Mount Everest (8,848 m)"
+        ]
+      },
+      "World History": {
+        title: "World History",
+        description: "Major events and civilizations in world history",
+        content: `World history covers significant events, civilizations, wars, revolutions, and cultural developments that have shaped human civilization. It includes ancient civilizations, medieval periods, renaissance, industrial revolution, and modern history.
+
+Knowledge of world history helps in understanding the evolution of human society and contemporary global issues.`,
+        keyPoints: [
+          "Ancient civilizations: Egyptian, Mesopotamian, Greek, Roman",
+          "Medieval period: Byzantine Empire, Islamic Golden Age",
+          "Renaissance and Enlightenment in Europe",
+          "Industrial Revolution and its impact",
+          "World Wars I and II",
+          "Cold War and decolonization",
+          "Formation of international organizations"
+        ],
+        importantDates: [
+          "3100 BCE - Beginning of Egyptian civilization",
+          "776 BCE - First Olympic Games in Greece",
+          "1453 CE - Fall of Constantinople",
+          "1789 CE - French Revolution",
+          "1914-1918 - World War I",
+          "1939-1945 - World War II"
+        ]
+      },
+      "Sports and Games": {
+        title: "Sports and Games",
+        description: "Popular sports, games, and sporting events",
+        content: `Sports and games encompass various physical activities, competitive sports, traditional games, and major sporting events. This includes information about rules, famous players, records, and international competitions.
+
+Sports knowledge is important for general awareness and understanding cultural significance of games in different societies.`,
+        keyPoints: [
+          "Olympic Games - Summer and Winter Olympics",
+          "Cricket World Cup and IPL",
+          "FIFA World Cup and major football leagues",
+          "Tennis Grand Slams: Wimbledon, US Open, French Open, Australian Open",
+          "Commonwealth Games and Asian Games",
+          "Traditional Indian games: Kabaddi, Kho-Kho",
+          "Famous sportspersons and their achievements"
+        ],
+        examples: [
+          "Olympics held every 4 years",
+          "Cricket World Cup - ICC tournament",
+          "FIFA World Cup - Most watched sporting event"
+        ]
+      },
+      "Art and Culture": {
+        title: "Art and Culture",
+        description: "Art forms, cultural heritage, and traditions",
+        content: `Art and culture encompass various forms of creative expression including visual arts, performing arts, literature, music, dance, and cultural traditions. It includes both traditional and contemporary art forms from India and around the world.
+
+Understanding art and culture is essential for appreciating human creativity and cultural diversity.`,
+        keyPoints: [
+          "Classical Indian arts: Bharatanatyam, Kathak, Carnatic music",
+          "Folk arts and crafts from different regions",
+          "Literature and famous authors",
+          "Painting styles: Mughal, Rajasthani, Tanjore",
+          "Architecture: Temple, Islamic, Colonial styles",
+          "Festivals and their cultural significance",
+          "UNESCO World Heritage Sites"
+        ],
+        examples: [
+          "Bharatanatyam - Classical dance from Tamil Nadu",
+          "Ajanta and Ellora caves - UNESCO World Heritage Sites",
+          "Rabindranath Tagore - Nobel Prize in Literature"
         ]
       }
     }
