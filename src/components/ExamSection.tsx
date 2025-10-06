@@ -4,11 +4,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BookOpen, Clock, Users, Award, Play, FileText, Activity, Save } from "lucide-react";
+import { BookOpen, Clock, Users, Award, Play, FileText, Activity, Save, Timer, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import StudyMaterialSection from "./StudyMaterialSection";
+import { useExamDeadline } from "@/hooks/useExamDeadline";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topicId: string) => void }) => {
   const { user } = useAuth();
@@ -16,6 +24,8 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
   const [showPhysicalTest, setShowPhysicalTest] = useState(false);
   const [showStudyMaterial, setShowStudyMaterial] = useState(false);
+  const [showDeadlineDialog, setShowDeadlineDialog] = useState(false);
+  const [selectedExamForDeadline, setSelectedExamForDeadline] = useState<string | null>(null);
   const [physicalTestData, setPhysicalTestData] = useState({
     height: "",
     chest: "",
@@ -24,6 +34,7 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
     notes: ""
   });
   const { toast } = useToast();
+  const { deadlines, startExamDeadline, getDeadlineForExam, getTimeRemaining, stopExamDeadline } = useExamDeadline();
 
   // Load saved physical test data on component mount
   useEffect(() => {
@@ -250,6 +261,70 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
     if (onStartQuiz) {
       onStartQuiz(subjectName, topicId);
     }
+  };
+
+  const handleStartDeadline = (examName: string, months: number) => {
+    startExamDeadline(examName, selectedCategory, months);
+    setShowDeadlineDialog(false);
+  };
+
+  const renderDeadlineTimer = (exam: any) => {
+    const deadline = getDeadlineForExam(exam.name, selectedCategory);
+    if (!deadline) return null;
+
+    const timeRemaining = getTimeRemaining(deadline.deadline_date);
+    
+    if (timeRemaining.expired) {
+      return (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-red-600">
+              <Timer size={16} />
+              <span className="text-sm font-semibold">Deadline Expired!</span>
+            </div>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => stopExamDeadline(deadline.id)}
+            >
+              <X size={14} />
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-3 mt-2">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2 text-blue-600">
+            <Timer size={16} />
+            <span className="text-sm font-semibold">Time Remaining:</span>
+          </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => stopExamDeadline(deadline.id)}
+          >
+            <X size={14} />
+          </Button>
+        </div>
+        <div className="flex gap-3 text-center">
+          <div className="flex-1 bg-white rounded p-2">
+            <div className="text-xl font-bold text-gray-900">{timeRemaining.days}</div>
+            <div className="text-xs text-gray-600">Days</div>
+          </div>
+          <div className="flex-1 bg-white rounded p-2">
+            <div className="text-xl font-bold text-gray-900">{timeRemaining.hours}</div>
+            <div className="text-xs text-gray-600">Hours</div>
+          </div>
+          <div className="flex-1 bg-white rounded p-2">
+            <div className="text-xl font-bold text-gray-900">{timeRemaining.minutes}</div>
+            <div className="text-xs text-gray-600">Mins</div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (showStudyMaterial && selectedExam) {
@@ -491,6 +566,19 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
                 >
                   Start Preparation
                 </Button>
+                {!getDeadlineForExam(exam.name, selectedCategory) && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedExamForDeadline(exam.name);
+                      setShowDeadlineDialog(true);
+                    }}
+                  >
+                    <Timer className="mr-2" size={16} />
+                    Set Deadline
+                  </Button>
+                )}
                 {exam.name === "TNUSRB SI" && (
                   <Button 
                     variant="outline" 
@@ -505,6 +593,8 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
                   </Button>
                 )}
               </div>
+
+              {renderDeadlineTimer(exam)}
             </CardContent>
           </Card>
         ))}
@@ -533,6 +623,45 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
           </div>
         </CardContent>
       </Card>
+
+      {/* Deadline Dialog */}
+      <Dialog open={showDeadlineDialog} onOpenChange={setShowDeadlineDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Set Study Deadline</DialogTitle>
+            <DialogDescription>
+              Choose your target deadline for {selectedExamForDeadline}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={() => handleStartDeadline(selectedExamForDeadline!, 6)}
+            >
+              <Timer className="mr-2" />
+              6 Months
+            </Button>
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={() => handleStartDeadline(selectedExamForDeadline!, 12)}
+            >
+              <Timer className="mr-2" />
+              1 Year (12 Months)
+            </Button>
+            <Button
+              className="w-full"
+              size="lg"
+              variant="outline"
+              onClick={() => handleStartDeadline(selectedExamForDeadline!, 18)}
+            >
+              <Timer className="mr-2" />
+              18 Months
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

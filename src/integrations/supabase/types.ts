@@ -124,6 +124,45 @@ export type Database = {
         }
         Relationships: []
       }
+      exam_deadlines: {
+        Row: {
+          created_at: string
+          deadline_date: string
+          deadline_months: number
+          exam_category: string
+          exam_name: string
+          id: string
+          is_active: boolean | null
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deadline_date: string
+          deadline_months: number
+          exam_category: string
+          exam_name: string
+          id?: string
+          is_active?: boolean | null
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deadline_date?: string
+          deadline_months?: number
+          exam_category?: string
+          exam_name?: string
+          id?: string
+          is_active?: boolean | null
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       exam_news: {
         Row: {
           category: string
