@@ -13,6 +13,7 @@ import AdminPanel from "@/components/AdminPanel";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
+  const [quizData, setQuizData] = useState<{subjectName: string; topicId: string} | null>(null);
   const { user, loading, signOut } = useAuth();
   const { isAdmin } = useAdmin();
   const navigate = useNavigate();
@@ -43,20 +44,25 @@ const Index = () => {
     navigate('/auth');
   };
 
+  const handleStartQuiz = (subjectName: string, topicId: string) => {
+    setQuizData({ subjectName, topicId });
+    setActiveSection("test");
+  };
+
   const renderActiveSection = () => {
     switch (activeSection) {
       case "home":
-        return <ExamSection />;
+        return <ExamSection onStartQuiz={handleStartQuiz} />;
       case "achievement":
         return <AchievementSection />;
       case "test":
-        return <TestSection />;
+        return <TestSection initialQuizData={quizData} onClearQuizData={() => setQuizData(null)} />;
       case "profile":
         return <ProfileSection />;
       case "admin":
         return <AdminPanel />;
       default:
-        return <ExamSection />;
+        return <ExamSection onStartQuiz={handleStartQuiz} />;
     }
   };
 

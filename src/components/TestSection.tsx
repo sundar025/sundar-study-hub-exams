@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { subjects } from "@/data/subjectQuizData";
 import { Subject, Topic, QuizQuestion, QuizResults } from "@/types/quiz";
 
-const TestSection = () => {
+const TestSection = ({ 
+  initialQuizData, 
+  onClearQuizData 
+}: { 
+  initialQuizData?: {subjectName: string; topicId: string} | null;
+  onClearQuizData?: () => void;
+}) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
@@ -20,6 +26,25 @@ const TestSection = () => {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [timeLeft, setTimeLeft] = useState(3000); // 50 minutes
   const [startTime, setStartTime] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (initialQuizData) {
+      // Find the subject
+      const subject = subjects.find(s => s.name.toLowerCase() === initialQuizData.subjectName.toLowerCase());
+      if (subject) {
+        setSelectedSubject(subject);
+        // Find the topic by name
+        const topic = subject.topics.find(t => t.name.toLowerCase().includes(initialQuizData.topicId.toLowerCase()));
+        if (topic) {
+          startTopicQuiz(topic);
+        }
+      }
+      // Clear the initial quiz data after processing
+      if (onClearQuizData) {
+        onClearQuizData();
+      }
+    }
+  }, [initialQuizData]);
 
   const startTopicQuiz = (topic: Topic) => {
     setSelectedTopic(topic);

@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import StudyMaterialSection from "./StudyMaterialSection";
 
-const ExamSection = () => {
+const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topicId: string) => void }) => {
   const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("state");
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
@@ -247,13 +247,9 @@ const ExamSection = () => {
   const currentExams = selectedCategory === "state" ? stateExams : centralExams;
 
   const handleStartQuiz = (subjectName: string, topicId: string) => {
-    setShowStudyMaterial(false);
-    // Navigate to Test section would be handled by parent (Index.tsx)
-    // For now, we'll show a toast
-    toast({
-      title: "Quiz Feature",
-      description: `Navigate to Test section to take quiz on ${subjectName} - ${topicId}`,
-    });
+    if (onStartQuiz) {
+      onStartQuiz(subjectName, topicId);
+    }
   };
 
   if (showStudyMaterial && selectedExam) {
