@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, CheckCircle } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, Brain } from "lucide-react";
 import { StudyContent } from "@/data/studyMaterialData";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { useEffect, useState } from "react";
@@ -12,9 +12,10 @@ interface TopicViewProps {
   topic: StudyContent;
   onBack: () => void;
   subjectName: string;
+  onStartQuiz?: (subjectName: string, topicId: string) => void;
 }
 
-const TopicView = ({ topic, onBack, subjectName }: TopicViewProps) => {
+const TopicView = ({ topic, onBack, subjectName, onStartQuiz }: TopicViewProps) => {
   const { getTopicProgress, markPointCompleted, isPointCompleted, recordStudySession } = useUserProgress();
   const [startTime, setStartTime] = useState<Date>(new Date());
   
@@ -127,6 +128,22 @@ const TopicView = ({ topic, onBack, subjectName }: TopicViewProps) => {
                   ))}
                 </ul>
               </div>
+            </div>
+          )}
+
+          {onStartQuiz && (
+            <div className="pt-6 border-t">
+              <Button
+                onClick={() => onStartQuiz(subjectName, topic.title)}
+                className="w-full flex items-center justify-center gap-2"
+                size="lg"
+              >
+                <Brain size={20} />
+                Take Quiz on {topic.title}
+              </Button>
+              <p className="text-sm text-gray-600 text-center mt-2">
+                Test your knowledge with 20 questions
+              </p>
             </div>
           )}
         </CardContent>

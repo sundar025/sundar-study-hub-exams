@@ -246,11 +246,22 @@ const ExamSection = () => {
 
   const currentExams = selectedCategory === "state" ? stateExams : centralExams;
 
+  const handleStartQuiz = (subjectName: string, topicId: string) => {
+    setShowStudyMaterial(false);
+    // Navigate to Test section would be handled by parent (Index.tsx)
+    // For now, we'll show a toast
+    toast({
+      title: "Quiz Feature",
+      description: `Navigate to Test section to take quiz on ${subjectName} - ${topicId}`,
+    });
+  };
+
   if (showStudyMaterial && selectedExam) {
     return (
       <StudyMaterialSection 
         examName={selectedExam}
         onBack={() => setShowStudyMaterial(false)}
+        onStartQuiz={handleStartQuiz}
       />
     );
   }

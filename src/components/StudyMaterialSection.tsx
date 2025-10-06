@@ -5,7 +5,15 @@ import TopicView from "./study/TopicView";
 import SubjectTopicsView from "./study/SubjectTopicsView";
 import SubjectsListView from "./study/SubjectsListView";
 
-const StudyMaterialSection = ({ examName, onBack }: { examName: string; onBack: () => void }) => {
+const StudyMaterialSection = ({ 
+  examName, 
+  onBack, 
+  onStartQuiz 
+}: { 
+  examName: string; 
+  onBack: () => void;
+  onStartQuiz?: (subjectName: string, topicId: string) => void;
+}) => {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
@@ -29,6 +37,7 @@ const StudyMaterialSection = ({ examName, onBack }: { examName: string; onBack: 
         topic={topic}
         onBack={handleTopicBack}
         subjectName={selectedSubject}
+        onStartQuiz={onStartQuiz}
       />
     );
   }
