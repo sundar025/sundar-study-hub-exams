@@ -109,6 +109,42 @@ const ExamSection = ({ onStartQuiz }: { onStartQuiz?: (subjectName: string, topi
       duration: "10 months preparation",
       difficulty: "High",
       color: "bg-blue-500"
+    },
+    {
+      name: "TNUSRB PC",
+      pattern: ["Written", "Physical", "Medical"],
+      description: "Tamil Nadu Uniformed Services Recruitment Board Police Constable",
+      subjects: ["General Studies", "Aptitude", "Tamil", "Reasoning"],
+      duration: "6 months preparation",
+      difficulty: "Medium",
+      color: "bg-cyan-500"
+    },
+    {
+      name: "TRB",
+      pattern: ["Written", "Interview"],
+      description: "Teachers Recruitment Board - Post Graduate Assistants",
+      subjects: ["General Studies", "Subject Knowledge", "Teaching Methodology", "Tamil"],
+      duration: "8 months preparation",
+      difficulty: "High",
+      color: "bg-violet-500"
+    },
+    {
+      name: "TET",
+      pattern: ["Paper I", "Paper II"],
+      description: "Teacher Eligibility Test - Tamil Nadu",
+      subjects: ["Child Development", "Language Proficiency", "Mathematics", "Environmental Studies"],
+      duration: "4 months preparation",
+      difficulty: "Medium",
+      color: "bg-teal-500"
+    },
+    {
+      name: "TNEB",
+      pattern: ["Written", "Technical Interview"],
+      description: "Tamil Nadu Electricity Board - Engineers & Technicians",
+      subjects: ["Electrical Engineering", "General Aptitude", "Technical Knowledge", "Current Affairs"],
+      duration: "10 months preparation",
+      difficulty: "High",
+      color: "bg-amber-600"
     }
   ];
 
